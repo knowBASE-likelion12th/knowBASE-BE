@@ -1,14 +1,13 @@
 package com.knowbase.knowbase.users.service;
 
-import com.knowbase.knowbase.users.dto.UserSignUpDto;
+import com.knowbase.knowbase.users.dto.MenteeSignUpDto;
+import com.knowbase.knowbase.users.dto.MentorSignUpDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 
 public interface UserService {
-    ResponseEntity<CustomApiResponse<?>> mentoSignup(UserSignUpDto memberSignUpDto);
+    ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto memberSignUpDto);
 
+    ResponseEntity<CustomApiResponse<?>> menteeSignup(MenteeSignUpDto menteeSignUpDto);
 }

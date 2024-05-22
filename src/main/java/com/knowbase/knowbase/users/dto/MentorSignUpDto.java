@@ -1,16 +1,14 @@
 package com.knowbase.knowbase.users.dto;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserSignUpDto {
+public class MentorSignUpDto {
     @NotNull(message = "아이디를 입력해주세요.")
     private String userName;
 
