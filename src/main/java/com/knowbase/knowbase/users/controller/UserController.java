@@ -2,6 +2,7 @@ package com.knowbase.knowbase.users.controller;
 
 import com.knowbase.knowbase.users.dto.MenteeSignUpDto;
 import com.knowbase.knowbase.users.dto.MentorSignUpDto;
+import com.knowbase.knowbase.users.dto.UserSignInDto;
 import com.knowbase.knowbase.users.service.UserService;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import jakarta.validation.Valid;
@@ -27,6 +28,10 @@ public class UserController {
         return userService.menteeSignup(menteeSignUpDto);
     }
     //로그인
+    @PostMapping("/login")
+    private ResponseEntity<CustomApiResponse<?>> signIn(@Valid @RequestBody UserSignInDto userSignInDto){
+        return userService.signIn(userSignInDto);
+    }
 
     //탈퇴
 

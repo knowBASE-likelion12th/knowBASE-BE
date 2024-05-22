@@ -4,6 +4,7 @@ package com.knowbase.knowbase.users.service;
 import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.users.dto.MenteeSignUpDto;
 import com.knowbase.knowbase.users.dto.MentorSignUpDto;
+import com.knowbase.knowbase.users.dto.UserSignInDto;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import lombok.Builder;
@@ -75,5 +76,26 @@ public class UserServiceImpl implements UserService {
 
         //응답
         return ResponseEntity.status(HttpStatus.OK.value()).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null,"멘티 회원가입에 성공하였습니다."));
+    }
+
+    //로그인
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> signIn(UserSignInDto userSignInDto) {
+        //회원이 DB에 존재하는지 확인
+        Optional<User> findUser = userRepository.findByUserName(userSignInDto.getUserName());
+
+        //회원이 존재하지 않을 때
+        if(findUser.isEmpty()){
+            CustomApiResponse<Void> failResponse =  CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(failResponse);
+        }
+        // 비밀번호가 일치하지 않을 때
+        if(!userSignInDto.getPassword().equals(findUser.get().getPassword())){
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 일치하지 않습니다."));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"로그인에 성공하였습니다."));
     }
 }
