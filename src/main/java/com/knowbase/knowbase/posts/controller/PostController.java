@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.posts.controller;
 
+import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.posts.dto.PostCreateDto;
 import com.knowbase.knowbase.posts.dto.PostUpdateDto;
 import com.knowbase.knowbase.posts.service.PostService;
@@ -9,6 +10,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/post")

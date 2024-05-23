@@ -163,8 +163,22 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public ResponseEntity<CustomApiResponse<?>> getRecentPost() {
+        List<Post> findRecentPost = postRepository.findAllByOrderByCreateAtDesc();
+        List<PostListDto.PostDto> postResponse = new ArrayList<>();
 
-        return null;
+        for(Post post : findRecentPost){
+            postResponse.add(PostListDto.PostDto.builder()
+                    .postId(post.getPostId())
+                    .postTitle(post.getPostTitle())
+                    .postContent(post.getPostContent())
+                    .postImgPath(post.getPostImgPath())
+                    .updatedAt(post.getUpdateAt())
+                    .build());
+        }
+
+        PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
+        CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "최신순 게시글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
 
