@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/users")
+@RequestMapping("api/user")
 public class UserController {
     private final UserService userService;
 
@@ -33,6 +33,24 @@ public class UserController {
         return userService.signIn(userSignInDto);
     }
 
+    //로그아웃
+
     //탈퇴
 
+
+    //멘토(isMentor=true) 모두 조회
+    @GetMapping("/all")
+    private ResponseEntity<CustomApiResponse<?>> getAllMentors(){
+        ResponseEntity<CustomApiResponse<?>> result =  userService.getAllMentors();
+        return result;
+    }
+
+    //멘토 상세 조회
+    @GetMapping()
+    private ResponseEntity<CustomApiResponse<?>> getMentorDetail(
+            @RequestParam("userId") Long userId){
+        System.out.println("LOG userId " + userId);
+        ResponseEntity<CustomApiResponse<?>> result = userService.getMentorDetail(userId);
+        return result;
+    }
 }
