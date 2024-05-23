@@ -27,15 +27,22 @@ public class PostController {
     //게시물 수정
     @PutMapping
     public ResponseEntity<CustomApiResponse<?>> updatePost(
-            @RequestParam Long postId,
+            @RequestParam("postId") Long postId,
             @RequestBody PostUpdateDto.Req postUpdateDto){
          ResponseEntity<CustomApiResponse<?>> result = postService.updatePost(postId, postUpdateDto);
          return result;
     }
     //게시물 삭제
     @DeleteMapping
-    public ResponseEntity<CustomApiResponse<?>> deletePost(@RequestParam Long postId){
+    public ResponseEntity<CustomApiResponse<?>> deletePost(@RequestParam("postId") Long postId){
         ResponseEntity<CustomApiResponse<?>> result = postService.deletePost(postId);
          return result;
+    }
+
+    //특정 게시물 상세 조회
+    @GetMapping
+    public ResponseEntity<CustomApiResponse<?>> getPostDetail(@RequestParam("postId") Long postId){
+        ResponseEntity<CustomApiResponse<?>> result = postService.getPostDatail(postId);
+        return result;
     }
 }

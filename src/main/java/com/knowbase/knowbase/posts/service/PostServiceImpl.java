@@ -3,6 +3,7 @@ package com.knowbase.knowbase.posts.service;
 import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.posts.dto.PostCreateDto;
+import com.knowbase.knowbase.posts.dto.PostListDto;
 import com.knowbase.knowbase.posts.dto.PostUpdateDto;
 import com.knowbase.knowbase.posts.repository.PostRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
@@ -92,7 +93,7 @@ public class PostServiceImpl implements PostService{
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
-                            "해당 유저는 존재하지 않습니다."));
+                            "해당 게시글은 존재하지 않습니다."));
         }
 
         //2. 게시물 삭제
@@ -100,7 +101,30 @@ public class PostServiceImpl implements PostService{
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"해당 게시물이 삭제되었습니다"));
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"해당 게시글이 삭제되었습니다"));
+    }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getPostDatail(Long postId) {
+
+        //DB에 존재하는 게시글인지
+        Optional<Post> findPost = postRepository.findById(postId);
+
+        if(findPost.isEmpty()){
+            CustomApiResponse<Void> res = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "해당하는 게시글을 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }
+
+        Post post = findPost.get();
+        PostListDto.PostDto postResponse = new PostListDto.PostDto(
+                post.getPostId(),
+                post.getPostTitle(),
+                post.getPostContent(),
+                post.getPostImgPath(),
+                post.getUpdateAt());
+
+        CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), postResponse, "게시글 조회 성공");
+        return ResponseEntity.ok(res);
     }
 }
 
