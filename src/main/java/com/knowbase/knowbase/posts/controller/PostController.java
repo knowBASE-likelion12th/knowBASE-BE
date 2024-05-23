@@ -33,4 +33,9 @@ public class PostController {
          return result;
     }
     //게시물 삭제
+    @DeleteMapping
+    public ResponseEntity<CustomApiResponse<?>> deletePost(@RequestParam Long postId){
+        ResponseEntity<CustomApiResponse<?>> result = postService.deletePost(postId);
+         return result;
+    }
 }

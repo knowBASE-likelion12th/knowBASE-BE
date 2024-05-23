@@ -81,6 +81,27 @@ public class PostServiceImpl implements PostService{
         CustomApiResponse<PostUpdateDto.UpdatePost> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), updatePostResponse, "게시글이 수정되었습니다.");
         return ResponseEntity.ok(res);
     }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> deletePost(Long postId) {
+        // 1. DB에 존재하는 게시물인지 확인
+        Optional<Post> findPost = postRepository.findById(postId);
+
+        //존재하지 않는 게시물이라면
+        if(findPost.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                            "해당 유저는 존재하지 않습니다."));
+        }
+
+        //2. 게시물 삭제
+        postRepository.delete(findPost.get());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"해당 게시물이 삭제되었습니다"));
+    }
 }
 
 
