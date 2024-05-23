@@ -23,7 +23,7 @@ public class Post extends BaseEntity {
     //게시글이 '다'에 해당
     @ManyToOne
     @JoinColumn(name="USER_ID")
-    private User user;
+    private User userId;
 
     @Column(name="POST_TITLE")
     private String postTitle;
@@ -33,4 +33,10 @@ public class Post extends BaseEntity {
 
     @Column(name="POST_IMG_PATH")
     private String postImgPath;
+
+    // 연관관계 편의 메소드
+    // 회원에 대한 연관관계 설정
+    public void createPost(User userId) {
+        this.userId = userId;
+    }
 }

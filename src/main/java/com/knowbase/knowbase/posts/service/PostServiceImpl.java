@@ -35,6 +35,7 @@ public class PostServiceImpl implements PostService{
                             "해당 유저는 존재하지 않습니다."));
         }
         Post newPost = postCreateDto.toEntity();
+        newPost.createPost(findUser.get());
         Post savedPost = postRepository.save(newPost);
 
         PostCreateDto.CreatPost createdPostResponse = new PostCreateDto.CreatPost(savedPost.getPostId(),savedPost.getCreateAt());
