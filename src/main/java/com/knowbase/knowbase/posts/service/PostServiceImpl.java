@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -125,6 +127,26 @@ public class PostServiceImpl implements PostService{
 
         CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), postResponse, "게시글 조회 성공");
         return ResponseEntity.ok(res);
+    }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getAllPost() {
+        List<Post> posts = postRepository.findAll();
+
+        List<PostListDto.PostDto> postResponse = new ArrayList<>();
+        for(Post post : posts){
+            postResponse.add(PostListDto.PostDto.builder()
+                    .postId(post.getPostId())
+                    .postTitle(post.getPostTitle())
+                    .postContent(post.getPostContent())
+                    .postImgPath(post.getPostImgPath())
+                    .updatedAt(post.getUpdateAt())
+                    .build());
+        }
+
+        PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
+        CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "전체 게시글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
 

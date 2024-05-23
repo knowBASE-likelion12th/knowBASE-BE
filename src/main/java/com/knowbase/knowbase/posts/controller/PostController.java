@@ -45,4 +45,12 @@ public class PostController {
         ResponseEntity<CustomApiResponse<?>> result = postService.getPostDatail(postId);
         return result;
     }
+
+    //전체 게시글 조회
+    @GetMapping("/all")
+    public ResponseEntity<CustomApiResponse<?>> getAllPost(){
+        ResponseEntity<CustomApiResponse<?>> result = postService.getAllPost();
+        return result;
+    }
+
 }
