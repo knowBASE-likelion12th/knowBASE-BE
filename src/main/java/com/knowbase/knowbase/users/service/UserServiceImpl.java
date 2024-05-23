@@ -8,13 +8,13 @@ import com.knowbase.knowbase.users.dto.MentorSignUpDto;
 import com.knowbase.knowbase.users.dto.UserSignInDto;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
+import jakarta.servlet.http.HttpSession;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Builder
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final HttpSession session;
 
     //멘토 회원가입
     @Override
@@ -84,7 +85,7 @@ public class UserServiceImpl implements UserService {
 
     //로그인
     @Override
-    public ResponseEntity<CustomApiResponse<?>> signIn(UserSignInDto userSignInDto) {
+    public ResponseEntity<CustomApiResponse<?>> signIn(UserSignInDto userSignInDto){
         //회원이 DB에 존재하는지 확인
         Optional<User> findUser = userRepository.findByUserName(userSignInDto.getUserName());
 
@@ -100,6 +101,8 @@ public class UserServiceImpl implements UserService {
                     .body(CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 일치하지 않습니다."));
         }
 
+        //로그인 성공
+        session.setAttribute("userId", findUser.get().getUserId());
         return ResponseEntity.status(HttpStatus.OK).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "로그인에 성공하였습니다."));
     }
 
@@ -146,5 +149,16 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), mentorResponse, "멘토 상세 조회에 성공하였습니다."));
     }
+
+    //멘토 수정페이지 접근 권한 검증
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> validateEditAccess(Long loggedInUserId, Long userId) {
+        if (loggedInUserId.equals(userId)) {
+            return ResponseEntity.ok(CustomApiResponse.createSuccess(HttpStatus.OK.value(),  null, "수정 페이지에 접속 가능합니다."));
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다."));
+    }
+
 }
 

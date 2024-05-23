@@ -17,4 +17,7 @@ public interface UserService {
     ResponseEntity<CustomApiResponse<?>> getAllMentors();
 
     ResponseEntity<CustomApiResponse<?>> getMentorDetail(Long userId);
+
+    ResponseEntity<CustomApiResponse<?>> validateEditAccess(Long loggedInUserId, Long userId);
+
 }
