@@ -39,4 +39,20 @@ public class Post extends BaseEntity {
     public void createPost(User userId) {
         this.userId = userId;
     }
+
+    // 게시글 제목 수정 메소드
+    public void changePostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    // 게시글 내용 수정 메소드
+    public void changePostContent(String postContent) {
+        this.postContent = postContent;
+    }
+
+    // 게시글 작성자 수정 메소드
+    public void changePostImgPath(String postImgPath) {
+        this.postImgPath = postImgPath;
+    }
+
 }
