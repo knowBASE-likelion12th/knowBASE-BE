@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    Optional<User> findByUserName(String userId);
+    Optional<User> findByUserName(String userName);
 
 
     //모든 멘토 조회: 회원의 isMentor가 true(멘토)인 회원을 찾는 repository 메소드
