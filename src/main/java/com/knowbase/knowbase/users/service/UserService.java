@@ -13,4 +13,11 @@ public interface UserService {
     ResponseEntity<CustomApiResponse<?>> menteeSignup(MenteeSignUpDto menteeSignUpDto);
 
     ResponseEntity<CustomApiResponse<?>> signIn(UserSignInDto userSignInDto);
+
+    ResponseEntity<CustomApiResponse<?>> getAllMentors();
+
+    ResponseEntity<CustomApiResponse<?>> getMentorDetail(Long userId);
+
+    ResponseEntity<CustomApiResponse<?>> validateEditAccess(Long loggedInUserId, Long userId);
+
 }
