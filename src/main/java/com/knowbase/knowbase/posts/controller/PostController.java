@@ -53,4 +53,11 @@ public class PostController {
         return result;
     }
 
+    //최신순 게시글 조회
+    @GetMapping("/recently")
+    public ResponseEntity<CustomApiResponse<?>> getRecentPost(){
+        ResponseEntity<CustomApiResponse<?>> result = postService.getRecentPost();
+        return result;
+    }
+
 }

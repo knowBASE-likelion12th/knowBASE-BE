@@ -49,6 +49,7 @@ public class PostServiceImpl implements PostService{
         return ResponseEntity.ok(res);
     }
 
+    //게시물 수정
     @Override
     public ResponseEntity<CustomApiResponse<?>> updatePost(Long postId, PostUpdateDto.Req postUpdateDto) {
         //1.수정하려는 게시물이 DB에 존재하는지 확인
@@ -85,6 +86,7 @@ public class PostServiceImpl implements PostService{
         return ResponseEntity.ok(res);
     }
 
+    //게시물 삭제
     @Override
     public ResponseEntity<CustomApiResponse<?>> deletePost(Long postId) {
         // 1. DB에 존재하는 게시물인지 확인
@@ -106,29 +108,39 @@ public class PostServiceImpl implements PostService{
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"해당 게시글이 삭제되었습니다"));
     }
 
+    //특정 게시글 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getPostDatail(Long postId) {
 
         //DB에 존재하는 게시글인지
         Optional<Post> findPost = postRepository.findById(postId);
-
         if(findPost.isEmpty()){
             CustomApiResponse<Void> res = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "해당하는 게시글을 찾을 수 없습니다.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }
 
+        //user 정보
+        Optional<User> findUser = userRepository.findById(findPost.get().getUserId().getUserId());
+
+
         Post post = findPost.get();
+        User user = findUser.get();
         PostListDto.PostDto postResponse = new PostListDto.PostDto(
                 post.getPostId(),
                 post.getPostTitle(),
                 post.getPostContent(),
                 post.getPostImgPath(),
-                post.getUpdateAt());
+                user.getUserName(),
+                user.getProfImgPath(),
+                post.getUpdateAt()
+                );
+
 
         CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), postResponse, "게시글 조회 성공");
         return ResponseEntity.ok(res);
     }
 
+    //전체 게시글 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getAllPost() {
         List<Post> posts = postRepository.findAll();
@@ -147,6 +159,12 @@ public class PostServiceImpl implements PostService{
         PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
         CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "전체 게시글 조회 성공");
         return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getRecentPost() {
+
+        return null;
     }
 }
 

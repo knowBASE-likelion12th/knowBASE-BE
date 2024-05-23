@@ -15,6 +15,8 @@ public class PostListDto {
         private String postTitle;
         private String postContent;
         private String postImgPath;
+        private String postAuthor;
+        private String postAuthorProfImg;
         private LocalDateTime updatedAt;
     }
 
