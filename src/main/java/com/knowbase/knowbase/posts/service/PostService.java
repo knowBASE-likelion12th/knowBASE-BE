@@ -21,4 +21,6 @@ public interface PostService {
     ResponseEntity<CustomApiResponse<?>> getAllPost();
 
     ResponseEntity<CustomApiResponse<?>> getRecentPost();
+
+    ResponseEntity<CustomApiResponse<?>> getMyPost(Long userId);
 }

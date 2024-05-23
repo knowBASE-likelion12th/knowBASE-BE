@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.users.repository;
 
+import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

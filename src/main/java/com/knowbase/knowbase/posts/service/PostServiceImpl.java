@@ -161,6 +161,8 @@ public class PostServiceImpl implements PostService{
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
+
+    //최신순 게시글 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getRecentPost() {
         List<Post> findRecentPost = postRepository.findAllByOrderByCreateAtDesc();
@@ -179,6 +181,33 @@ public class PostServiceImpl implements PostService{
         PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
         CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "최신순 게시글 조회 성공");
         return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    //내가 쓴 게시물 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getMyPost(Long userId) {
+
+        Optional<User> OptionalUser = userRepository.findById(userId);
+
+        //해당 userId를 가진 유저가 쓴 게시물 찾기
+        List<Post> findPost = postRepository.findByUserId(OptionalUser.get());
+
+
+        List<PostListDto.PostDto> postResponse = new ArrayList<>();
+        for(Post post : findPost){
+            postResponse.add(PostListDto.PostDto.builder()
+                    .postId(post.getPostId())
+                    .postTitle(post.getPostTitle())
+                    .postContent(post.getPostContent())
+                    .postImgPath(post.getPostImgPath())
+                    .updatedAt(post.getUpdateAt())
+                    .build());
+        }
+
+        PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
+        CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "내가 쓴 게시글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+
     }
 }
 

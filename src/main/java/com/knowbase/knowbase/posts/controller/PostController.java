@@ -63,4 +63,10 @@ public class PostController {
         return result;
     }
 
+    //내가 쓴 게시글 조회
+    @GetMapping("/mypost")
+    public ResponseEntity<CustomApiResponse<?>> getMyPost(@RequestParam("userId") Long userId){
+        ResponseEntity<CustomApiResponse<?>> result = postService.getMyPost(userId);
+        return result;
+    }
 }
