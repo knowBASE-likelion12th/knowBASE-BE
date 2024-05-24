@@ -6,8 +6,7 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-
-public class WriteCommentdto {
+public class UpdateCommentdto {
     @Getter
     @Setter
     @AllArgsConstructor
@@ -16,23 +15,21 @@ public class WriteCommentdto {
         @NotNull(message = "댓글 작성자의 기본키를 작성해주세요")
         private Long userId;
 
-        @NotNull(message = "게시글의 기본키를 작성해주세요")
-        private Long postId;
+        @NotNull(message = "댓글의 기본키를 작성해주세요")
+        private Long commentId;
 
-        @NotEmpty(message = "댓글 내용이 비어있습니다.")
+        @NotEmpty(message = "수정할 댓글 내용이 비어있습니다.")
         private String commentContent;
     }
 
     @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class WriteComment {
-        private Long commentId;
-        private LocalDateTime createAt;
+    public static class UpdateComment {
+        private LocalDateTime updateAt;
 
-        public WriteComment(Long commentId, LocalDateTime createAt) {
-            this.commentId = commentId;
-            this.createAt = createAt;
+        public UpdateComment(LocalDateTime updateAt) {
+            this.updateAt = updateAt;
         }
     }
 }

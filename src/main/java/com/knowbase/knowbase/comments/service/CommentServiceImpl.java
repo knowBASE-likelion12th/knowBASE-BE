@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.comments.service;
 
+import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.comments.repository.CommentRepository;
 import com.knowbase.knowbase.domain.Comment;
@@ -24,6 +25,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
+    //댓글 작성
     @Override
     public ResponseEntity<CustomApiResponse<?>> writeComment(WriteCommentdto.Req writeCommentDto) {
         //1. 댓글 작성자가 DB에 존재하는지
@@ -65,5 +67,44 @@ public class CommentServiceImpl implements CommentService {
                         responseDto,
                         "댓글이 작성 되었습니다."));
 
+    }
+
+
+    //댓글 수정
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> updateComment(UpdateCommentdto.Req updateCommentDto) {
+        //수정하려는 댓글이 DB에 존재하는지 확인
+        Optional<Comment> findComment = commentRepository.findById(updateCommentDto.getCommentId());
+        if(findComment.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(CustomApiResponse.createFailWithout(
+                            HttpStatus.BAD_REQUEST.value(),
+                            "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
+        }
+
+        //댓글의 작성자와 현재 로그인한 사용자가 일치하는지 확인
+        Long commentUserId = findComment.get().getUser().getUserId();
+        if(commentUserId != updateCommentDto.getUserId()) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(CustomApiResponse.createFailWithout(
+                            HttpStatus.FORBIDDEN.value(),
+                            "잘못된 요청입니다."));
+        }
+
+        //댓글 수정
+        Comment comment = findComment.get();
+        Comment savedComment = commentRepository.save(comment);
+        //comment.changeContent(comment.getCommentContent());
+
+        //응답 dto 생성
+        UpdateCommentdto.UpdateComment responseDto = new UpdateCommentdto.UpdateComment(savedComment.getUpdateAt());
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(
+                        HttpStatus.OK.value(),
+                        responseDto,
+                        "댓글이 수정되었습니다."));
     }
 }
