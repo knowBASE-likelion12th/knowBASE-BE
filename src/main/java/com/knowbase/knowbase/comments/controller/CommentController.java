@@ -1,6 +1,7 @@
 package com.knowbase.knowbase.comments.controller;
 
 
+import com.knowbase.knowbase.comments.dto.DeleteCommentDto;
 import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.comments.service.CommentService;
@@ -23,12 +24,13 @@ public class CommentController {
         return commentService.writeComment(writeCommentDto);
     }
 
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<CustomApiResponse<?>> updateComment(@Valid @RequestBody UpdateCommentdto.Req updateCommentDto) {
         return commentService.updateComment(updateCommentDto);
     }
 
-
-
-
+    @DeleteMapping
+    public ResponseEntity<CustomApiResponse<?>> deleteComment(@RequestBody @Valid DeleteCommentDto deleteCommentDto){
+        return commentService.deleteComment(deleteCommentDto);
+    }
 }

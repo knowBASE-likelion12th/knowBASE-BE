@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.comments.service;
 
+import com.knowbase.knowbase.comments.dto.DeleteCommentDto;
 import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.comments.repository.CommentRepository;
@@ -106,5 +107,37 @@ public class CommentServiceImpl implements CommentService {
                         HttpStatus.OK.value(),
                         responseDto,
                         "댓글이 수정되었습니다."));
+    }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> deleteComment(DeleteCommentDto deleteCommentDto) {
+        //해당 댓글이 DB에 존재하는 댓글인지
+        Optional<Comment> findComment = commentRepository.findById(deleteCommentDto.getCommentId());
+        if(findComment.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(CustomApiResponse.createFailWithout(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
+        }
+        // 댓글의 작성자와 현재 접속한 사용자가 같은지 확인
+        if (findComment.get().getUser().getUserId() != deleteCommentDto.getUserId()  ) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(CustomApiResponse.createFailWithout(
+                            HttpStatus.FORBIDDEN.value(),
+                            "잘못된 요청입니다."));
+        }
+
+        //댓글 삭제
+        commentRepository.delete(findComment.get());
+
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(
+                        HttpStatus.OK.value(),
+                        null,
+                        "댓글이 삭제되었습니다."));
     }
 }
