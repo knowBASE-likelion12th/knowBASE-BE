@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
 
     //멘토 회원가입
     @Override
-    public ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto memberSignUpDto) {
-        String userName = memberSignUpDto.getUserName();
+    public ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto memtorSignUpDto) {
+        String userName = memtorSignUpDto.getUserName();
         Optional<User> findUser = userRepository.findByUserName(userName);
 
         //1. 이미 존재하는 아이디인지 검사 -> 회원가입 x
@@ -40,14 +40,16 @@ public class UserServiceImpl implements UserService {
 
         // 2. 존재하지 않는 아이디 -> 회원가입 O
         User newUser = User.builder()
-                .userName(memberSignUpDto.getUserName())
-                .password(memberSignUpDto.getPassword())
-                .name(memberSignUpDto.getName())
-                .isMentor(memberSignUpDto.getIsMentor())
-                .employmentPath(memberSignUpDto.getEmploymentPath())
-                .profImgPath(memberSignUpDto.getProfileImgPath())
-                .mentoringPath(memberSignUpDto.getMentoringPath())
-                .mentorContent(memberSignUpDto.getMentorContent())
+                .userName(memtorSignUpDto.getUserName())
+                .password(memtorSignUpDto.getPassword())
+                .name(memtorSignUpDto.getName())
+                .isMentor(memtorSignUpDto.getIsMentor())
+                .employmentPath(memtorSignUpDto.getEmploymentPath())
+                .gender(memtorSignUpDto.getGender())
+                .age(memtorSignUpDto.getAge())
+                .profImgPath(memtorSignUpDto.getProfileImgPath())
+                .mentoringPath(memtorSignUpDto.getMentoringPath())
+                .mentorContent(memtorSignUpDto.getMentorContent())
                 .build();
         //회원 저장
         userRepository.save(newUser);
@@ -103,7 +105,7 @@ public class UserServiceImpl implements UserService {
 
 
         //로그인 성공
-        session.setAttribute("userId", findUser.get().getUserId());
+        //session.setAttribute("userId", findUser.get().getUserId());
         User user = findUser.get();
         UserSignInDto.AccountEnter accountEnter =  new UserSignInDto.AccountEnter(
                 user.getUserId(),
@@ -165,6 +167,33 @@ public class UserServiceImpl implements UserService {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(), "접근 권한이 없습니다."));
+    }
+
+
+    //회원탈퇴
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> withdrawMember(Long userId) {
+        //DB에 존재하는 회원인지 확인
+        Optional<User> findUser = userRepository.findById(userId);
+        if (findUser.isEmpty()) {
+            CustomApiResponse<Void> failResponse = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(failResponse);
+        }
+        //탈퇴
+        userRepository.delete(findUser.get());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"회원이 정상적으로 탈퇴되었습니다"));
+    }
+
+    //로그아웃
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> logout(HttpSession session) {
+        //session.invalidate();
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"로그아웃 되었습니다."));
     }
 
 }

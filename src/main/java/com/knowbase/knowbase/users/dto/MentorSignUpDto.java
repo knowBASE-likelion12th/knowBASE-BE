@@ -24,6 +24,12 @@ public class MentorSignUpDto {
     @NotNull(message = "재직증명서를 첨부해주세요.")
     private String employmentPath;
 
+    @NotNull(message = "성별을 선택해주세요.")
+    private Boolean gender;
+
+    @NotNull(message = "연령대를 선택해주세요.")
+    private String age;
+
     private String profileImgPath;
     private String mentoringPath;
     private String mentorContent;

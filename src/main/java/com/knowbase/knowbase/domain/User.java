@@ -49,4 +49,25 @@ public class User extends BaseEntity {
 
     @Column(name="MENTOR_CONTENT")
     private String mentorContent;
+
+    @Column(name="GENDER")
+    private Boolean gender;
+
+    @Column(name="AGE")
+    private String age;
+
+    @Column(name="INTEREST")
+    private String interest;
+
+    @Column(name="HOUSING_TYPE")
+    private String housingType;
+
+    @Column(name="SPACE_TYPE")
+    private String spaceType;
+
+    @Column(name="MENTO_STYLE")
+    private String mentoStyle;
+
+    @Column(name="KAKAO_ID")
+    private String kakaoId;
 }
