@@ -9,10 +9,20 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@SequenceGenerator(
+        name = "USER_ID", //식별자 생성기 이름
+        sequenceName = "USER_ID_SEQ", //DB에 등록되어 있는 Sequence 이름
+        initialValue = 1, //처음 시작 value 설정
+        allocationSize = 1 //Sequence 한번 호출 시 증가하는 수
+        //allocationSize가 기본값이 50이므로 1로 설정하지 않을 시, sequence 호출 시 마다 50씩 증가
+)
 @Table(name="USERS")
 public class User extends BaseEntity {
     @Id
-    @GeneratedValue
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "USER_ID"
+    )
     @Column(name="USER_ID")
     private Long userId;
 
@@ -39,4 +49,25 @@ public class User extends BaseEntity {
 
     @Column(name="MENTOR_CONTENT")
     private String mentorContent;
+
+    @Column(name="GENDER")
+    private Boolean gender;
+
+    @Column(name="AGE")
+    private String age;
+
+    @Column(name="INTEREST")
+    private String interest;
+
+    @Column(name="HOUSING_TYPE")
+    private String housingType;
+
+    @Column(name="SPACE_TYPE")
+    private String spaceType;
+
+    @Column(name="MENTO_STYLE")
+    private String mentoStyle;
+
+    @Column(name="KAKAO_ID")
+    private String kakaoId;
 }

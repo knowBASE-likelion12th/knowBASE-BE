@@ -36,8 +36,17 @@ public class UserController {
     }
 
     //로그아웃
+    @PostMapping("/logout")
+    private ResponseEntity<CustomApiResponse<?>> logout(HttpSession session){
+        return userService.logout(session);
+    }
+
 
     //탈퇴
+    @DeleteMapping(path = "/withdraw")
+    private ResponseEntity<CustomApiResponse<?>> withdrawMember(@RequestParam("userId") Long userId) {
+        return userService.withdrawMember(userId);
+    }
 
 
     //멘토(isMentor=true) 모두 조회
