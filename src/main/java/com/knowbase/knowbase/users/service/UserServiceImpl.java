@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.OK.value()).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "멘티 회원가입에 성공하였습니다."));
     }
 
-    //로그인
+    //로그인 // 응답 : 멘토Id, isMentor, 비번
     @Override
     public ResponseEntity<CustomApiResponse<?>> signIn(UserSignInDto userSignInDto){
         //회원이 DB에 존재하는지 확인
@@ -101,9 +101,16 @@ public class UserServiceImpl implements UserService {
                     .body(CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 일치하지 않습니다."));
         }
 
+
         //로그인 성공
         session.setAttribute("userId", findUser.get().getUserId());
-        return ResponseEntity.status(HttpStatus.OK).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "로그인에 성공하였습니다."));
+        User user = findUser.get();
+        UserSignInDto.AccountEnter accountEnter =  new UserSignInDto.AccountEnter(
+                user.getUserId(),
+                user.getPassword(),
+                user.getIsMentor()
+        );
+        return ResponseEntity.status(HttpStatus.OK).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), accountEnter, "로그인에 성공하였습니다."));
     }
 
     //회원(멘토) 전체 조회
