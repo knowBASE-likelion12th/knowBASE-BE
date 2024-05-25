@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.comments.service;
 
+import com.knowbase.knowbase.comments.dto.CommentListDto;
 import com.knowbase.knowbase.comments.dto.DeleteCommentDto;
 import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
@@ -7,6 +8,7 @@ import com.knowbase.knowbase.comments.repository.CommentRepository;
 import com.knowbase.knowbase.domain.Comment;
 import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
+import com.knowbase.knowbase.posts.dto.PostListDto;
 import com.knowbase.knowbase.posts.repository.PostRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
@@ -16,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -139,5 +143,34 @@ public class CommentServiceImpl implements CommentService {
                         HttpStatus.OK.value(),
                         null,
                         "댓글이 삭제되었습니다."));
+    }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getAllComment(Long postId) {
+        //해당 게시글이 DB에 존재하는지
+        Optional<Post> findPost = postRepository.findById(postId);
+        if(findPost.isEmpty()) {
+            CustomApiResponse<Void> res = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "해당하는 게시글을 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }
+
+        //해당 PostId를 가진 게시물에 달린 댓글 찾기
+        List<Comment> findComment = commentRepository.findByPost(findPost.get());
+
+        List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
+        for(Comment comment : findComment){
+            commentResponse.add(CommentListDto.CommentDto.builder()
+                            .commentId(comment.getCommentId())
+                            .userId(comment.getUser().getUserId())
+                            .userName(comment.getUser().getUserName())
+                            .profImgPath(comment.getUser().getProfImgPath())
+                             .isMentor(comment.getUser().getIsMentor())
+                            .commentContent(comment.getCommentContent())
+                            .build());
+        }
+
+        CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
+        CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 게시물의 모든 댓글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }

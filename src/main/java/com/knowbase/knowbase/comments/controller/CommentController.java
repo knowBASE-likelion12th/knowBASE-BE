@@ -19,18 +19,26 @@ import org.springframework.web.bind.annotation.*;
 public class CommentController {
     private final CommentService commentService;
 
+    //댓글 작성
     @PostMapping
     public ResponseEntity<CustomApiResponse<?>> writeComment(@Valid @RequestBody WriteCommentdto.Req writeCommentDto) {
         return commentService.writeComment(writeCommentDto);
     }
 
+    //댓글 수정
     @PutMapping
     public ResponseEntity<CustomApiResponse<?>> updateComment(@Valid @RequestBody UpdateCommentdto.Req updateCommentDto) {
         return commentService.updateComment(updateCommentDto);
     }
 
+    //댓글 삭제
     @DeleteMapping
     public ResponseEntity<CustomApiResponse<?>> deleteComment(@RequestBody @Valid DeleteCommentDto deleteCommentDto){
         return commentService.deleteComment(deleteCommentDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<CustomApiResponse<?>> getAllComment(@RequestParam("postId") @Valid Long postId){
+        return commentService.getAllComment(postId);
     }
 }
