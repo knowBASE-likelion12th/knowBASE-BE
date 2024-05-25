@@ -39,7 +39,7 @@ public class Introduce extends BaseEntity {
 
     //카카오아이디
     @Column(name = "KAKAO_ID")
-    private String kaKaoId;
+    private String kakaoId;
 
     //연관관계 편의 메소드
     //회원에 대한 연관관계 설정

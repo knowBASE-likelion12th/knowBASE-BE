@@ -1,11 +1,14 @@
 package com.knowbase.knowbase.roadmaps.service;
 
-import com.knowbase.knowbase.roadmaps.dto.RoadmapDto;
+import com.knowbase.knowbase.roadmaps.dto.RoadmapCreateDto;
+import com.knowbase.knowbase.roadmaps.dto.RoadmapUpdateDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface RoadmapService {
-    ResponseEntity<CustomApiResponse<?>> createRoadmap(Long userId, RoadmapDto roadmapDto);
-    ResponseEntity<CustomApiResponse<?>> updateRoadmap(Long roadmapId, RoadmapDto roadmapDto);
-    ResponseEntity<CustomApiResponse<?>> getRoadmapDetail(Long roadmapId);
+    ResponseEntity<CustomApiResponse<?>> createRoadmap(RoadmapCreateDto.Req roadmapCreateDto);
+
+    ResponseEntity<CustomApiResponse<?>> updateRoadmap(Long roadmapId, RoadmapUpdateDto.Req roadmapUpdateDto);
+
+    ResponseEntity<CustomApiResponse<?>> getRoadmap(Long userId);
 }
