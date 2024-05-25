@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface CommentLikeService {
     ResponseEntity<CustomApiResponse<?>> isLike(CommentLikeDto.Req commentLikeDto);
+
+    ResponseEntity<CustomApiResponse<?>> isUnlike(CommentLikeDto.Req commentLikeDto);
 }

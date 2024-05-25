@@ -17,8 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentLikeController {
     private final CommentLikeService commentLikeService;
 
-    @PostMapping("/isLike")
+    @PostMapping("/like")
     public ResponseEntity<CustomApiResponse<?>> isLike(@Valid @RequestBody CommentLikeDto.Req commentLikeDto) {
         return commentLikeService.isLike(commentLikeDto);
+    }
+
+    @PostMapping("/unlike")
+    public ResponseEntity<CustomApiResponse<?>> isUnlike(@Valid @RequestBody CommentLikeDto.Req commentLikeDto) {
+        return commentLikeService.isUnlike(commentLikeDto);
     }
 }
