@@ -7,9 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter
 @Builder
@@ -46,11 +43,6 @@ public class Post extends BaseEntity {
 
     @Column(name="POST_IMG_PATH")
     private String postImgPath;
-
-    //연관관계에 있는 모든 댓글 얻어오기
-    //하나의 게시글 - 여러개의 댓글 => 일 대 다
-    @OneToMany(mappedBy = "post")
-    private List<Comment> commentList = new ArrayList<>();
 
     // 연관관계 편의 메소드
     // 회원에 대한 연관관계 설정

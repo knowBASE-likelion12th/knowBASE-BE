@@ -1,11 +1,12 @@
 package com.knowbase.knowbase.comments.service;
 
-import com.knowbase.knowbase.comments.dto.*;
+import com.knowbase.knowbase.comments.dto.DeleteCommentDto;
+import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
+import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.comments.repository.CommentRepository;
 import com.knowbase.knowbase.domain.Comment;
 import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
-import com.knowbase.knowbase.posts.dto.PostListDto;
 import com.knowbase.knowbase.posts.repository.PostRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
@@ -15,8 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,7 +32,7 @@ public class CommentServiceImpl implements CommentService {
         //1. 댓글 작성자가 DB에 존재하는지
         Optional<User> findUser = userRepository.findById(writeCommentDto.getUserId());
         //존재하지 않으면
-        if (findUser.isEmpty()) {
+        if(findUser.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
@@ -54,13 +53,13 @@ public class CommentServiceImpl implements CommentService {
                 .commentContent(writeCommentDto.getCommentContent())
                 .build();
         //연관관계 설정
-        createComment.createComment(findUser.get(), findPost.get());
+        createComment.createComment(findUser.get(),findPost.get());
 
         //댓글 엔티티 저장
         Comment savedComment = commentRepository.save(createComment);
 
         //응답 dto 생성
-        WriteCommentdto.WriteComment responseDto = new WriteCommentdto.WriteComment(savedComment.getCommentId(), savedComment.getCreateAt());
+        WriteCommentdto.WriteComment responseDto = new WriteCommentdto.WriteComment(savedComment.getCommentId(),savedComment.getCreateAt());
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -77,7 +76,7 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<CustomApiResponse<?>> updateComment(UpdateCommentdto.Req updateCommentDto) {
         //수정하려는 댓글이 DB에 존재하는지 확인
         Optional<Comment> findComment = commentRepository.findById(updateCommentDto.getCommentId());
-        if (findComment.isEmpty()) {
+        if(findComment.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(CustomApiResponse.createFailWithout(
@@ -87,7 +86,7 @@ public class CommentServiceImpl implements CommentService {
 
         //댓글의 작성자와 현재 로그인한 사용자가 일치하는지 확인
         Long commentUserId = findComment.get().getUser().getUserId();
-        if (commentUserId != updateCommentDto.getUserId()) {
+        if(commentUserId != updateCommentDto.getUserId()) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(
@@ -114,15 +113,15 @@ public class CommentServiceImpl implements CommentService {
     public ResponseEntity<CustomApiResponse<?>> deleteComment(DeleteCommentDto deleteCommentDto) {
         //해당 댓글이 DB에 존재하는 댓글인지
         Optional<Comment> findComment = commentRepository.findById(deleteCommentDto.getCommentId());
-        if (findComment.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.BAD_REQUEST.value(),
-                            "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
+        if(findComment.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(CustomApiResponse.createFailWithout(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
         }
         // 댓글의 작성자와 현재 접속한 사용자가 같은지 확인
-        if (findComment.get().getUser().getUserId() != deleteCommentDto.getUserId()) {
+        if (findComment.get().getUser().getUserId() != deleteCommentDto.getUserId()  ) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(
@@ -140,78 +139,5 @@ public class CommentServiceImpl implements CommentService {
                         HttpStatus.OK.value(),
                         null,
                         "댓글이 삭제되었습니다."));
-    }
-
-    //해당 게시글에 달린 모든 댓글 조회
-    @Override
-    public ResponseEntity<CustomApiResponse<?>> getComment(Long postId) {
-        //해당 게시글이 존재하는지 확인
-        Optional<Post> findPost = postRepository.findById(postId);
-
-        if (findPost.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.NOT_FOUND.value(),
-                            "해당하는 게시글을 찾을 수 없습니다."));
-        }
-        List<Comment> findComment = commentRepository.findByPostId(postId);
-
-        List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
-        for (Comment comment : findComment) {
-            commentResponse.add(CommentListDto.CommentDto.builder()
-                    .commentId(comment.getCommentId())
-                    .userId(comment.getUser().getUserId())
-                    .userName(comment.getUser().getUserName())
-                    .commentContent(comment.getCommentContent())
-                    .updatedAt(comment.getUpdateAt())
-                    .build());
-        }
-
-        CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
-        CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 게시물의 모든 댓글 조회 성공");
-        return ResponseEntity.status(HttpStatus.OK).body(res);
-    }
-
-
-    //내가 쓴 댓글 조회
-    @Override
-    public ResponseEntity<CustomApiResponse<?>> getMyComment(Long userId) {
-        Optional<User> findUser = userRepository.findById(userId);
-        if (findUser.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.FORBIDDEN.value(),
-                            "존재하지 않는 회원입니다."));
-        }
-
-        //해당 유저가 존재하는 유저인지
-        Optional<Post> findPost = postRepository.findByUserId(findUser.get().getUserId());
-        if (findPost.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.NOT_FOUND.value(),
-                            "존재하지 않는 게시물입니다."));
-        }
-        List<Comment> findComment = commentRepository.findByPostId(findPost.get().getPostId());
-
-        List<CommentListDto.CommentDto> postResponse = new ArrayList<>();
-
-        //응답 데이터 형식에 맞게 조회한 댓글 리스트
-        List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
-        for (Comment comment : findComment) {
-            commentResponse.add(CommentListDto.CommentDto.builder()
-                    .commentId(comment.getCommentId())
-                    .userId(comment.getUser().getUserId())
-                    .userName(comment.getUser().getUserName())
-                    .commentContent(comment.getCommentContent())
-                    .updatedAt(comment.getUpdateAt())
-                    .build());
-        }
-        CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
-        CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "내가 쓴 댓글 조회 성공");
-        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
