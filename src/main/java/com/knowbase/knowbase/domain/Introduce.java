@@ -20,9 +20,8 @@ public class Introduce extends BaseEntity {
     @Column(name = "INTRO_ID")
     private Long introId;
 
-    // 한명의 유저는 여러개의 자기소개를 작성할 수 있다.
-    // 자기소개가 '다'에 해당
-    @ManyToOne
+    // 한명의 유저는 한개의 자기소개를 작성할 수 있다.
+    @OneToOne
     @JoinColumn(name = "USER_ID")
     private User userId;
 
