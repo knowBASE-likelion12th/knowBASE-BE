@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 
 
 public interface UserService {
-    ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto memberSignUpDto);
+    ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto mentorSignUpDto);
 
     ResponseEntity<CustomApiResponse<?>> menteeSignup(MenteeSignUpDto menteeSignUpDto);
 

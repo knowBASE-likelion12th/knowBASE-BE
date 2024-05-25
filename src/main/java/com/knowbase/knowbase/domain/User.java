@@ -38,6 +38,9 @@ public class User extends BaseEntity {
     @Column(name="IS_MENTOR")
     private Boolean isMentor;
 
+    @Column(name="NICKNAME")
+    private String nickname;
+
     @Column(name="EMPLOYMENT_PATH")
     private String employmentPath;
 

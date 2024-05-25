@@ -1,13 +1,13 @@
-/*
 package com.knowbase.knowbase.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import com.knowbase.knowbase.util.entity.BaseEntity;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.lang.reflect.Member;
 
 @Entity
 @Getter
@@ -22,7 +22,39 @@ import lombok.NoArgsConstructor;
         //allocationSize가 기본값이 50이므로 1로 설정하지 않을 시, sequence 호출 시 마다 50씩 증가
 )
 @Table(name="COMMENTS")
-public class Comment {
+public class Comment extends BaseEntity {
+    @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "COMMENT_ID"
+    )
+    @Column(name="COMMENT_ID")
+    private Long commentId;
 
+    @Column(name="COMMENT_CONTENT")
+    private String commentContent;
+
+    @Column(name="IS_LIKE")
+    private Boolean isLike;
+
+    @Column(name="ADOPTION")
+    private Boolean adoption;
+
+    @ManyToOne //댓글이 '다'에 해당
+    @JoinColumn(name = "USER_ID")
+    private User user; //외래키
+
+    @ManyToOne //댓글이 '다'에 해당
+    @JoinColumn(name = "POST_ID")
+    private Post post; //외래키
+
+    //회원과 게시글에 대한 연관관계 설정
+    public void createComment(User user, Post post) {
+        this.user = user;
+        this.post = post;
+    }
+    // 댓글 수정 함수
+    public void changeContent(String commentContent) {
+        this.commentContent = commentContent;
+    }
 }
-*/

@@ -28,8 +28,8 @@ public class UserServiceImpl implements UserService {
 
     //멘토 회원가입
     @Override
-    public ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto memtorSignUpDto) {
-        String userName = memtorSignUpDto.getUserName();
+    public ResponseEntity<CustomApiResponse<?>> mentoSignup(MentorSignUpDto mentorSignUpDto) {
+        String userName = mentorSignUpDto.getUserName();
         Optional<User> findUser = userRepository.findByUserName(userName);
 
         //1. 이미 존재하는 아이디인지 검사 -> 회원가입 x
@@ -40,16 +40,14 @@ public class UserServiceImpl implements UserService {
 
         // 2. 존재하지 않는 아이디 -> 회원가입 O
         User newUser = User.builder()
-                .userName(memtorSignUpDto.getUserName())
-                .password(memtorSignUpDto.getPassword())
-                .name(memtorSignUpDto.getName())
-                .isMentor(memtorSignUpDto.getIsMentor())
-                .employmentPath(memtorSignUpDto.getEmploymentPath())
-                .gender(memtorSignUpDto.getGender())
-                .age(memtorSignUpDto.getAge())
-                .profImgPath(memtorSignUpDto.getProfileImgPath())
-                .mentoringPath(memtorSignUpDto.getMentoringPath())
-                .mentorContent(memtorSignUpDto.getMentorContent())
+                .userName(mentorSignUpDto.getUserName())
+                .password(mentorSignUpDto.getPassword())
+                .name(mentorSignUpDto.getName())
+                .isMentor(mentorSignUpDto.getIsMentor())
+                .nickname(mentorSignUpDto.getNickname())
+                .employmentPath(mentorSignUpDto.getEmploymentPath())
+                .gender(mentorSignUpDto.getGender())
+                .age(mentorSignUpDto.getAge())
                 .build();
         //회원 저장
         userRepository.save(newUser);
@@ -75,8 +73,10 @@ public class UserServiceImpl implements UserService {
                 .userName(menteeSignUpDto.getUserName())
                 .password(menteeSignUpDto.getPassword())
                 .name(menteeSignUpDto.getName())
+                .nickname(menteeSignUpDto.getNickname())
                 .isMentor(menteeSignUpDto.getIsMentor())
-                .profImgPath(menteeSignUpDto.getProfileImgPath())
+                .gender(menteeSignUpDto.getGender())
+                .age(menteeSignUpDto.getAge())
                 .build();
         //회원 저장
         userRepository.save(newUser);
