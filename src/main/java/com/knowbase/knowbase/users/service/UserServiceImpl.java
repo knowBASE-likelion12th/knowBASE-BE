@@ -120,14 +120,14 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<CustomApiResponse<?>> getAllMentors() {
         List<User> mentors = userRepository.findByIsMentorTrue();
         List<MentorListDto.MentorResponse> mentorResponses = mentors.stream().map(user -> MentorListDto.MentorResponse.builder()
-                .id(user.getUserId())
+                .userId(user.getUserId())
                 .userName(user.getUserName())
-                .name(user.getName())
+                .nickName(user.getNickname())
                 .profileImgPath(user.getProfImgPath())
                 .mentorContent(user.getMentorContent())
                 .mentoringPath(user.getMentoringPath())
-                .employmentPath(user.getEmploymentPath())
                 .isMentor(user.getIsMentor())
+                .KakaoId(user.getKakaoId())
                 .build()).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -145,14 +145,12 @@ public class UserServiceImpl implements UserService {
 
         User user = mentor.get();
         MentorListDto.MentorResponse mentorResponse = MentorListDto.MentorResponse.builder()
-                .id(user.getUserId())
+                .userId(user.getUserId())
                 .userName(user.getUserName())
-                .name(user.getName())
+                .nickName(user.getName())
                 .profileImgPath(user.getProfImgPath())
-                .mentorContent(user.getMentorContent())
-                .mentoringPath(user.getMentoringPath())
-                .employmentPath(user.getEmploymentPath())
                 .isMentor(user.getIsMentor())
+                .KakaoId(user.getKakaoId())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK)
