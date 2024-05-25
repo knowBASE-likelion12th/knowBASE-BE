@@ -130,7 +130,7 @@ public class PostServiceImpl implements PostService{
                 post.getPostTitle(),
                 post.getPostContent(),
                 post.getPostImgPath(),
-                user.getUserName(),
+                user.getNickname(),
                 user.getProfImgPath(),
                 post.getUpdateAt()
                 );
@@ -152,7 +152,7 @@ public class PostServiceImpl implements PostService{
                     .postTitle(post.getPostTitle())
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
-                    .postAuthor(post.getUserId().getUserName())
+                    .nickname(post.getUserId().getNickname())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
                     .updatedAt(post.getUpdateAt())
                     .build());
@@ -176,7 +176,7 @@ public class PostServiceImpl implements PostService{
                     .postTitle(post.getPostTitle())
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
-                    .postAuthor(post.getUserId().getUserName())
+                    .nickname(post.getUserId().getNickname())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
                     .updatedAt(post.getUpdateAt())
                     .build());
@@ -204,7 +204,7 @@ public class PostServiceImpl implements PostService{
                     .postTitle(post.getPostTitle())
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
-                    .postAuthor(post.getUserId().getUserName())
+                    .nickname(post.getUserId().getNickname())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
                     .updatedAt(post.getUpdateAt())
                     .build());
