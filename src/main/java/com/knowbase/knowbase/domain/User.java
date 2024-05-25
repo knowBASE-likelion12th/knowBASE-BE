@@ -70,7 +70,4 @@ public class User extends BaseEntity {
 
     @Column(name="MENTO_STYLE")
     private String mentoStyle;
-
-    @Column(name="KAKAO_ID")
-    private String kakaoId;
 }
