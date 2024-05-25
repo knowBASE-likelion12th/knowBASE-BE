@@ -21,6 +21,9 @@ public class MentorSignUpDto {
     @NotNull(message = "멘토인지 멘티인지 구별해주세요")
     private Boolean isMentor;
 
+    @NotNull(message = "닉네임을 입력해주세요")
+    private String nickname;
+
     @NotNull(message = "재직증명서를 첨부해주세요.")
     private String employmentPath;
 
@@ -29,8 +32,4 @@ public class MentorSignUpDto {
 
     @NotNull(message = "연령대를 선택해주세요.")
     private String age;
-
-    private String profileImgPath;
-    private String mentoringPath;
-    private String mentorContent;
 }

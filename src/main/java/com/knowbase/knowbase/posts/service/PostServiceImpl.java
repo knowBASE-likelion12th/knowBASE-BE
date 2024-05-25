@@ -152,6 +152,8 @@ public class PostServiceImpl implements PostService{
                     .postTitle(post.getPostTitle())
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
+                    .postAuthor(post.getUserId().getUserName())
+                    .postAuthorProfImg(post.getUserId().getProfImgPath())
                     .updatedAt(post.getUpdateAt())
                     .build());
         }
@@ -174,6 +176,8 @@ public class PostServiceImpl implements PostService{
                     .postTitle(post.getPostTitle())
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
+                    .postAuthor(post.getUserId().getUserName())
+                    .postAuthorProfImg(post.getUserId().getProfImgPath())
                     .updatedAt(post.getUpdateAt())
                     .build());
         }
@@ -200,6 +204,8 @@ public class PostServiceImpl implements PostService{
                     .postTitle(post.getPostTitle())
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
+                    .postAuthor(post.getUserId().getUserName())
+                    .postAuthorProfImg(post.getUserId().getProfImgPath())
                     .updatedAt(post.getUpdateAt())
                     .build());
         }

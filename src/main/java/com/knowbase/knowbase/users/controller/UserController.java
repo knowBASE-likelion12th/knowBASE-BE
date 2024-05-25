@@ -20,8 +20,8 @@ public class UserController {
 
     //멘토 회원가입
     @PostMapping("/register/mentor")
-    private ResponseEntity<CustomApiResponse<?>> mentoSignup(@Valid @RequestBody MentorSignUpDto memberSignUpDto ){
-        return userService.mentoSignup(memberSignUpDto);
+    private ResponseEntity<CustomApiResponse<?>> mentoSignup(@Valid @RequestBody MentorSignUpDto mentorSignUpDto ){
+        return userService.mentoSignup(mentorSignUpDto);
     }
 
     //멘티 회원가입
