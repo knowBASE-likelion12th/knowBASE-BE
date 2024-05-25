@@ -38,6 +38,10 @@ public class Introduce extends BaseEntity {
     @Column(name = "STRENGTH")
     private String strength;
 
+    //카카오아이디
+    @Column(name = "KAKAO_ID")
+    private String kaKaoId;
+
     //연관관계 편의 메소드
     //회원에 대한 연관관계 설정
     public void createIntroduce(User userId) {
@@ -58,5 +62,4 @@ public class Introduce extends BaseEntity {
     public void changeStrength(String strength) {
         this.strength = strength;
     }
-
 }

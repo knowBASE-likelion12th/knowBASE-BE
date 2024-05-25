@@ -32,6 +32,7 @@ public class IntroduceServiceImpl implements com.knowbase.knowbase.introduces.se
                 .introContent(introduceDto.getIntroContent())
                 .availableTime(introduceDto.getAvailableTime())
                 .strength(introduceDto.getStrength())
+                .kaKaoId(introduceDto.getKakaoId())
                 .build();
 
         introduceRepository.save(introduce);
@@ -41,11 +42,11 @@ public class IntroduceServiceImpl implements com.knowbase.knowbase.introduces.se
     }
 
     @Override
-    public ResponseEntity<CustomApiResponse<?>> updateIntroduce(Long introId, IntroduceDto introduceDto) {
-        Optional<Introduce> introduce = introduceRepository.findById(introId);
+    public ResponseEntity<CustomApiResponse<?>> updateIntroduce(Long userId, IntroduceDto introduceDto) {
+        Optional<Introduce> introduce = introduceRepository.findById(userId);
         if (introduce.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "소개 글을 찾을 수 없습니다."));
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "유저를 찾을 수 없습니다."));
         }
 
         Introduce existingIntroduce = introduce.get();
@@ -60,8 +61,8 @@ public class IntroduceServiceImpl implements com.knowbase.knowbase.introduces.se
     }
 
     @Override
-    public ResponseEntity<CustomApiResponse<?>> getIntroduceDetail(Long introId) {
-        Optional<Introduce> introduce = introduceRepository.findById(introId);
+    public ResponseEntity<CustomApiResponse<?>> getIntroduceDetail(Long userId) {
+        Optional<Introduce> introduce = introduceRepository.findById(userId);
         if (introduce.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "소개 글을 찾을 수 없습니다."));
@@ -73,6 +74,7 @@ public class IntroduceServiceImpl implements com.knowbase.knowbase.introduces.se
                 .availableTime(existingIntroduce.getAvailableTime())
                 .strength(existingIntroduce.getStrength())
                 .userId(existingIntroduce.getUserId().getUserId())
+                .KakaoId(existingIntroduce.getKaKaoId())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK)

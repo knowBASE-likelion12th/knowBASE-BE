@@ -127,7 +127,6 @@ public class UserServiceImpl implements UserService {
                 .mentorContent(user.getMentorContent())
                 .mentoringPath(user.getMentoringPath())
                 .isMentor(user.getIsMentor())
-                .KakaoId(user.getKakaoId())
                 .build()).collect(Collectors.toList());
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -150,7 +149,6 @@ public class UserServiceImpl implements UserService {
                 .nickName(user.getName())
                 .profileImgPath(user.getProfImgPath())
                 .isMentor(user.getIsMentor())
-                .KakaoId(user.getKakaoId())
                 .build();
 
         return ResponseEntity.status(HttpStatus.OK)

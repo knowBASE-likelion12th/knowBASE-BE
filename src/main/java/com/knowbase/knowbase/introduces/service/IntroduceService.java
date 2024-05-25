@@ -6,6 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface IntroduceService {
     ResponseEntity<CustomApiResponse<?>> createIntroduce(Long userId, IntroduceDto introduceDto);
-    ResponseEntity<CustomApiResponse<?>> updateIntroduce(Long introId, IntroduceDto introduceDto);
-    ResponseEntity<CustomApiResponse<?>> getIntroduceDetail(Long introId);
+    ResponseEntity<CustomApiResponse<?>> updateIntroduce(Long userId, IntroduceDto introduceDto);
+    ResponseEntity<CustomApiResponse<?>> getIntroduceDetail(Long userId);
 }

@@ -12,4 +12,6 @@ public class IntroduceDto {
     private String availableTime;
     private String strength;
     private Long userId;
+    private Long introId;
+    private String KakaoId;
 }
