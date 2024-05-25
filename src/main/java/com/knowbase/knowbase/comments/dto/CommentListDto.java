@@ -12,7 +12,7 @@ public class CommentListDto {
     public static class CommentDto{
         private Long commentId;
         private Long userId;
-        private String userName;
+        private String nickname;
         private String profImgPath;
         private Boolean isMentor;
         private String commentContent;
