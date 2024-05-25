@@ -37,8 +37,13 @@ public class CommentController {
         return commentService.deleteComment(deleteCommentDto);
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<CustomApiResponse<?>> getAllComment(@RequestParam("postId") @Valid Long postId){
         return commentService.getAllComment(postId);
+    }
+
+    @GetMapping("/my")
+    public ResponseEntity<CustomApiResponse<?>> getMyComment(@RequestParam("userId") @Valid Long userId){
+        return commentService.getMyComment(userId);
     }
 }

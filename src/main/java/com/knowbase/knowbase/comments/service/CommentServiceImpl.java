@@ -18,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -113,6 +114,7 @@ public class CommentServiceImpl implements CommentService {
                         "댓글이 수정되었습니다."));
     }
 
+    //댓글 삭제
     @Override
     public ResponseEntity<CustomApiResponse<?>> deleteComment(DeleteCommentDto deleteCommentDto) {
         //해당 댓글이 DB에 존재하는 댓글인지
@@ -145,6 +147,7 @@ public class CommentServiceImpl implements CommentService {
                         "댓글이 삭제되었습니다."));
     }
 
+    //해당 게시물의 달린 모든 댓글 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getAllComment(Long postId) {
         //해당 게시글이 DB에 존재하는지
@@ -171,6 +174,39 @@ public class CommentServiceImpl implements CommentService {
 
         CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
         CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 게시물의 모든 댓글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    //내가 쓴 댓글 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getMyComment(Long userId) {
+        //해당 유저가 DB에 존재하는 유저인지
+        Optional<User> findUser = userRepository.findById(userId);
+        if(findUser.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                            "존재하지 않는 회원입니다."));
+        }
+
+        //해당 유저가 쓴 댓글 DB에서 찾기
+        List<Comment> findComment = commentRepository.findByUser(findUser.get());
+
+        List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
+
+        for(Comment comment : findComment){
+            commentResponse.add(CommentListDto.CommentDto.builder()
+                    .commentId(comment.getCommentId())
+                    .userId(comment.getUser().getUserId())
+                    .userName(comment.getUser().getUserName())
+                    .profImgPath(comment.getUser().getProfImgPath())
+                    .isMentor(comment.getUser().getIsMentor())
+                    .commentContent(comment.getCommentContent())
+                    .build());
+        }
+
+        CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
+        CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 유저가 쓴 댓글 조회 성공");
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
