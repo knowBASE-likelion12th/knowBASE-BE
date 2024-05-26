@@ -219,7 +219,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = findUser.get();
-        user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath());
+        user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoring_path(), userUpdateDto.getMentorContent());
 
         userRepository.save(user);
 

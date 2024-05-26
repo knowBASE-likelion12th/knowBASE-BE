@@ -75,7 +75,7 @@ public class UserController {
 
 
     // 회원 정보 수정
-    @PutMapping("/update/{userId}")
+    @PatchMapping("/update/{userId}")
     private ResponseEntity<CustomApiResponse<?>> updateUser(
             @PathVariable("userId") Long userId,
             @Valid @RequestBody UserUpdateDto userUpdateDto) {

@@ -16,4 +16,8 @@ public class UserUpdateDto {
     private String nickName;
 
     private String profileImgPath;
+
+    private String mentoring_path;
+
+    private String mentorContent;
 }
