@@ -18,6 +18,7 @@ public class CommentListDto {
         private String commentContent;
         private Long likeCount;
         private Boolean isLike;
+        private Long commentCount;
     }
     // 댓글 조회
     @Getter @Setter

@@ -69,4 +69,18 @@ public class PostController {
         ResponseEntity<CustomApiResponse<?>> result = postService.getMyPost(userId);
         return result;
     }
+
+    //댓글 많은 순 게시글 조회
+    @GetMapping("/descending")
+    public ResponseEntity<CustomApiResponse<?>> getDescCommentPost(){
+        ResponseEntity<CustomApiResponse<?>> result = postService.getDescCommentPost();
+        return result;
+    }
+
+    //댓글 적은 순 게시글 조회
+    @GetMapping("/ascending")
+    public ResponseEntity<CustomApiResponse<?>> getAsceCommentPost(){
+        ResponseEntity<CustomApiResponse<?>> result = postService.getAsceCommentPost();
+        return result;
+    }
 }
