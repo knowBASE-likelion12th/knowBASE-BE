@@ -133,6 +133,26 @@ public class UserServiceImpl implements UserService {
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "멘토 전체 조회에 성공하였습니다."));
     }
 
+    //멘토 최신순 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getAllMentorsByCreateAt() {
+        List<User> mentors = userRepository.findByIsMentorTrueOrderByCreateAtDesc();
+        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
+                .map(user -> MentorListDto.MentorResponse.builder()
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .nickName(user.getNickname())
+                        .profileImgPath(user.getProfImgPath())
+                        .mentorContent(user.getMentorContent())
+                        .mentoringPath(user.getMentoringPath())
+                        .isMentor(user.getIsMentor())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "최신순 멘토 조회에 성공하였습니다."));
+    }
+
     //특정 회원 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getMentorDetail(Long userId) {

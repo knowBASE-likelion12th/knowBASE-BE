@@ -57,6 +57,12 @@ public class UserController {
         return result;
     }
 
+    // 최신순 멘토 조회
+    @GetMapping("/mentors/all/latest")
+    private ResponseEntity<CustomApiResponse<?>> getAllMentorsByCreatedAt(){
+        return userService.getAllMentorsByCreateAt();
+    }
+
     // 모든 멘티 조회
     @GetMapping("/mentees/all")
     private ResponseEntity<CustomApiResponse<?>> getAllMentees() {
