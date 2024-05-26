@@ -50,11 +50,18 @@ public class UserController {
 
 
     //멘토(isMentor=true) 모두 조회
-    @GetMapping("/all")
+    @GetMapping("/mentors/all")
     private ResponseEntity<CustomApiResponse<?>> getAllMentors(){
         ResponseEntity<CustomApiResponse<?>> result =  userService.getAllMentors();
         return result;
     }
+
+    // 모든 멘티 조회
+    @GetMapping("/mentees/all")
+    private ResponseEntity<CustomApiResponse<?>> getAllMentees() {
+        return userService.getAllMentees();
+    }
+
 
     //멘토 상세 조회
     @GetMapping()

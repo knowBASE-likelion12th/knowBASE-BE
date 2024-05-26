@@ -2,10 +2,7 @@ package com.knowbase.knowbase.users.service;
 
 
 import com.knowbase.knowbase.domain.User;
-import com.knowbase.knowbase.users.dto.MenteeSignUpDto;
-import com.knowbase.knowbase.users.dto.MentorListDto;
-import com.knowbase.knowbase.users.dto.MentorSignUpDto;
-import com.knowbase.knowbase.users.dto.UserSignInDto;
+import com.knowbase.knowbase.users.dto.*;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import jakarta.servlet.http.HttpSession;
@@ -190,6 +187,22 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"로그아웃 되었습니다."));
+    }
+
+    //모든 멘티 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getAllMentees() {
+        List<User> mentees = userRepository.findByIsMentorFalse();
+        List<MenteeListDto.MenteeResponse> menteeResponses = mentees.stream().map(user -> MenteeListDto.MenteeResponse.builder()
+                .userId(user.getUserId())
+                .userName(user.getUserName())
+                .nickName(user.getNickname())
+                .profileImgPath(user.getProfImgPath())
+                .isMentor(user.getIsMentor())
+                .build()).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MenteeListDto.SearchMenteesRes(menteeResponses), "멘티 전체 조회에 성공하였습니다."));
     }
 
 }

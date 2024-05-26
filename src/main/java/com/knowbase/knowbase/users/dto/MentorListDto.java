@@ -16,7 +16,6 @@ public class MentorListDto {
         private String mentorContent;  // 멘토의 멘토링 소개글
         private String mentoringPath;  // 멘토의 멘토링 경로
         private Boolean isMentor; // 멘토인지 멘티인지 구별
-        private String KakaoId; // 멘토의 카카오 아이디
     }
 
     //멘토 리스트 조회 : List<Mentor> mentors

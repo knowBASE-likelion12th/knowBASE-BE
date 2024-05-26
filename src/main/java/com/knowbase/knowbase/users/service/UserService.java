@@ -24,4 +24,7 @@ public interface UserService {
     ResponseEntity<CustomApiResponse<?>> withdrawMember(Long userId);
 
     ResponseEntity<CustomApiResponse<?>> logout(HttpSession session);
+
+    // 모든 멘티 조회
+    ResponseEntity<CustomApiResponse<?>> getAllMentees();
 }
