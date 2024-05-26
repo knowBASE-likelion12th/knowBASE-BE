@@ -6,7 +6,10 @@ import com.knowbase.knowbase.domain.Category;
 import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.users.dto.*;
 import com.knowbase.knowbase.users.repository.UserRepository;
+import com.knowbase.knowbase.util.exception.CustomValidationException;
+import com.knowbase.knowbase.util.exception.EntityDuplicatedException;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
+import com.knowbase.knowbase.util.valid.CustomValid;
 import jakarta.servlet.http.HttpSession;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
@@ -343,6 +346,25 @@ public class UserServiceImpl implements UserService {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 낮은 순 멘토 조회에 성공하였습니다."));
+    }
+
+    //아이디 중복확인
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> checkUserIdExists(String userName) {
+        // 사용자 아이디 형식 검증
+        if (!CustomValid.isUserIdValid(userName)) {
+            throw new CustomValidationException("아이디는 영문자와 숫자만 포함할 수 있습니다.");
+        }
+
+        // 사용자 아이디 중복 검증
+        boolean userIdExists = userRepository.findByUserName(userName).isPresent();
+        if (userIdExists) {
+            throw new EntityDuplicatedException("이미 사용중인 아이디입니다.");
+        }
+
+        // 응답
+        CustomApiResponse<Object> resultBody = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "사용 가능한 아이디입니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(resultBody);
     }
 }
 

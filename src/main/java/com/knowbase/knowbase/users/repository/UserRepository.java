@@ -29,5 +29,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     // 멘토를 리뷰의 만족도 낮은 순서로 정렬하여 조회
     @Query("SELECT r.mentorId FROM Review r WHERE r.mentorId.isMentor = true GROUP BY r.mentorId ORDER BY AVG(r.satisfaction) ASC")
     List<User> findMentorsBySatisfactionAsc();
+
 }
 
