@@ -121,4 +121,11 @@ public class UserController {
     public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc() {
         return userService.getMentorsBySatisfactionAsc();
     }
+
+    //아이디 중복 확인
+    @GetMapping("/exists")
+    public ResponseEntity<CustomApiResponse<?>> checkUserIdExists(@RequestParam("userName") String userName) {
+        ResponseEntity<CustomApiResponse<?>> result = userService.checkUserIdExists(userName);
+        return result;
+    }
 }

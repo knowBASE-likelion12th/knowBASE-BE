@@ -40,4 +40,6 @@ public interface UserService {
     //리뷰 별점 순 조회
     ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionDesc();
     ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc();
+
+    ResponseEntity<CustomApiResponse<?>> checkUserIdExists(String userId);
 }
