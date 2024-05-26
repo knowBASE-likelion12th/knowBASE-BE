@@ -40,7 +40,7 @@ public class Comment extends BaseEntity {
     @Column(name="LIKE_COUNT")
     private Long likeCount;
 
-    @Column(name="ADOPTION")
+    @Column(name="IS_ADOPT")
     private Boolean adoption;
 
     @ManyToOne //댓글이 '다'에 해당
