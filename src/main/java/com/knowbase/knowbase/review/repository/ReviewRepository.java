@@ -12,4 +12,6 @@ import java.util.Optional;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByMentorId(User mentor);
+
+    List<Review> findByMenteeId(User user);
 }

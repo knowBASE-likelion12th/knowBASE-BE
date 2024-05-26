@@ -13,14 +13,27 @@ import org.springframework.web.bind.annotation.*;
 public class ReviewController {
     private final ReviewService reviewService;
 
+    //리뷰 작성
     @PostMapping
     public ResponseEntity<CustomApiResponse<?>> createReview(@RequestBody ReviewCreateDto.Req req) {
         return reviewService.createReview(req);
     }
 
+    //멘토의 평균 평점 조회
     @GetMapping("/highstar")
     public ResponseEntity<CustomApiResponse<?>> getHighStarAvg(@RequestParam("userId") Long mentorId) {
         return reviewService.getHighStarAvg(mentorId);
+    }
+
+    //내가 쓴 후기 조회(멘티)
+    @GetMapping("/wrotereview")
+    public ResponseEntity<CustomApiResponse<?>> getWroteReview(@RequestParam("userId") Long menteeId) {
+        return reviewService.getWroteReview(menteeId);
+    }
+    //나의 후기 조회(멘토)
+    @GetMapping("/myreview")
+    public ResponseEntity<CustomApiResponse<?>> getMyReview(@RequestParam("userId") Long mentorId) {
+        return reviewService.getMyReview(mentorId);
     }
 
 }

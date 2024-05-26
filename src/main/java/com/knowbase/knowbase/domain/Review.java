@@ -36,6 +36,9 @@ public class Review extends BaseEntity {
     @Column(name="NICKNAME")
     private String nickname;
 
+    @Column(name="date")
+    private String date;
+
     @Column(name="BEFORE_RE_IMG_PATH")
     private String beforeReImgPath;
 

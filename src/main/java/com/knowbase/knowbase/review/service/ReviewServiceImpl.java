@@ -1,10 +1,14 @@
 package com.knowbase.knowbase.review.service;
 
+import com.knowbase.knowbase.comments.dto.CommentListDto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
+import com.knowbase.knowbase.domain.Comment;
+import com.knowbase.knowbase.domain.CommentLike;
 import com.knowbase.knowbase.domain.Review;
 import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.review.dto.HighStarAvgDto;
 import com.knowbase.knowbase.review.dto.ReviewCreateDto;
+import com.knowbase.knowbase.review.dto.ReviewListDto;
 import com.knowbase.knowbase.review.repository.ReviewRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
@@ -13,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -96,5 +101,47 @@ public class ReviewServiceImpl implements ReviewService{
                 .body(CustomApiResponse.createSuccess(
                         HttpStatus.OK.value(),
                         res, "해당 멘토의 평점 조회 성공"));
+    }
+
+
+    //내가 쓴 후기(멘티)
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getWroteReview(Long menteeId) {
+        //해당 유저가 DB에 존재하는 유저인지
+        Optional<User> findUser = userRepository.findById(menteeId);
+        if(findUser.isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                            "존재하지 않는 회원입니다."));
+        }
+        List<Review> findReview = reviewRepository.findByMenteeId(findUser.get());
+
+        List<ReviewListDto.ReviewDto> reviewResponse = new ArrayList<>();
+
+        for(Review review : findReview){
+            reviewResponse.add(ReviewListDto.ReviewDto.builder()
+                            .mentorId(review.getMentorId().getUserId())
+                            .menteeId(review.getMenteeId().getUserId())
+                            .reviewTitle(review.getReviewTitle())
+                            .date(review.getDate())
+                            .beforeReImgPath(review.getBeforeReImgPath())
+                            .afterReImgPath(review.getAfterReImgPath())
+                            .reviewContent(review.getReviewContent())
+                            .satisfaction(review.getSatisfaction())
+                            .period(review.getPeriod())
+                            .budget(review.getBudget())
+                            .build());
+        }
+
+        ReviewListDto.SearchReviewRes searchReviewRes = new ReviewListDto.SearchReviewRes(reviewResponse);
+        CustomApiResponse<ReviewListDto.SearchReviewRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchReviewRes, "해당 멘티가 쓴 후기 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+    //나의 후기(멘토)
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getMyReview(Long mentorId) {
+        return null;
     }
 }
