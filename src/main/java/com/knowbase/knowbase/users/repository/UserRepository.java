@@ -17,5 +17,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 모든 멘티 조회
     List<User> findByIsMentorFalse();
+
+    // 최신순 멘토 조회
+    List<User> findByIsMentorTrueOrderByCreateAtDesc();
 }
 
