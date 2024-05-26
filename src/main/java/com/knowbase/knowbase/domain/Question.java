@@ -8,16 +8,16 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @SequenceGenerator(
-        name = "seq_question",
-        sequenceName = "seq_question",
+        name = "QUESTION_ID",
+        sequenceName = "QUESTION_ID_SEQ",
         initialValue = 1,
         allocationSize = 1
 )
-@Table(name = "questions")
+@Table(name = "QUESTIONS")
 public class Question extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_question")
-    @Column(name = "question_id")
+    @Column(name = "QUESTION_ID")
     private Long questionId;
 
     //한명의 유저는 4개의 질문과 답변을 작성할 수 있다.
