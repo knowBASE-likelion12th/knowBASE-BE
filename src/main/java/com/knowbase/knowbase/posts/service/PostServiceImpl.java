@@ -131,6 +131,7 @@ public class PostServiceImpl implements PostService{
                 post.getPostContent(),
                 post.getPostImgPath(),
                 user.getNickname(),
+                post.getUserId().getUserId(),
                 user.getProfImgPath(),
                 post.getUpdateAt()
                 );
@@ -214,6 +215,57 @@ public class PostServiceImpl implements PostService{
         CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "내가 쓴 게시글 조회 성공");
         return ResponseEntity.status(HttpStatus.OK).body(res);
 
+    }
+
+    //댓글 많은 순 게시물 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getDescCommentPost() {
+
+        //댓글 많은 순으로
+        List<Post> posts = postRepository.findAllByCommentsCountDesc();
+
+        List<PostListDto.PostDto> postResponse = new ArrayList<>();
+        for(Post post : posts){
+            postResponse.add(PostListDto.PostDto.builder()
+                    .postId(post.getPostId())
+                    .postTitle(post.getPostTitle())
+                    .postContent(post.getPostContent())
+                    .postImgPath(post.getPostImgPath())
+                    .nickname(post.getUserId().getNickname())
+                    .postAuthorProfImg(post.getUserId().getProfImgPath())
+                    .updatedAt(post.getUpdateAt())
+                    .build());
+        }
+
+        PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
+        CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "댓글 많은 순 게시글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
+    }
+
+
+    //댓글 적은 순 게시물 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getAsceCommentPost() {
+        //댓글 적은 순으로
+        List<Post> posts = postRepository.findAllByCommentsCountAsc();
+
+
+        List<PostListDto.PostDto> postResponse = new ArrayList<>();
+        for(Post post : posts){
+            postResponse.add(PostListDto.PostDto.builder()
+                    .postId(post.getPostId())
+                    .postTitle(post.getPostTitle())
+                    .postContent(post.getPostContent())
+                    .postImgPath(post.getPostImgPath())
+                    .nickname(post.getUserId().getNickname())
+                    .postAuthorProfImg(post.getUserId().getProfImgPath())
+                    .updatedAt(post.getUpdateAt())
+                    .build());
+        }
+
+        PostListDto.SearchPostsRes searchPostsRes = new PostListDto.SearchPostsRes(postResponse);
+        CustomApiResponse<PostListDto.SearchPostsRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchPostsRes, "댓글 적은 순 게시글 조회 성공");
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 }
 

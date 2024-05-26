@@ -15,7 +15,7 @@ public interface CommentService {
 
     ResponseEntity<CustomApiResponse<?>> deleteComment(DeleteCommentDto commentId);
 
-    ResponseEntity<CustomApiResponse<?>> getAllComment(Long postId);
+    ResponseEntity<CustomApiResponse<?>> getAllComment(Long postId, Long userId);
 
     ResponseEntity<CustomApiResponse<?>> getMyComment(Long userId);
 }

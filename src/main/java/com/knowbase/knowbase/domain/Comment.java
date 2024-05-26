@@ -37,6 +37,9 @@ public class Comment extends BaseEntity {
     @Column(name="IS_LIKE")
     private Boolean isLike;
 
+    @Column(name="LIKE_COUNT")
+    private Long likeCount;
+
     @Column(name="ADOPTION")
     private Boolean adoption;
 

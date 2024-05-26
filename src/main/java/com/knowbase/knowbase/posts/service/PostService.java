@@ -23,4 +23,8 @@ public interface PostService {
     ResponseEntity<CustomApiResponse<?>> getRecentPost();
 
     ResponseEntity<CustomApiResponse<?>> getMyPost(Long userId);
+
+    ResponseEntity<CustomApiResponse<?>> getDescCommentPost();
+
+    ResponseEntity<CustomApiResponse<?>> getAsceCommentPost();
 }

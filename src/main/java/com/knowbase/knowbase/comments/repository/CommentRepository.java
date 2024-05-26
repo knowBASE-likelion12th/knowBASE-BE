@@ -9,10 +9,13 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findByPost(Post post);
 
-    List<Comment> findByUser(User findUser);
-}
+    List<Comment> findByUser(User user);
 
+    Long countByPost (Post post); //게시물의 댓글 갯수를 셈
+
+}

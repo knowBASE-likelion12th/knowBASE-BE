@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Builder
@@ -43,6 +45,9 @@ public class Post extends BaseEntity {
 
     @Column(name="POST_IMG_PATH")
     private String postImgPath;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments;
 
     // 연관관계 편의 메소드
     // 회원에 대한 연관관계 설정
