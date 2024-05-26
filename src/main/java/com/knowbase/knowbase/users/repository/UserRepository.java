@@ -3,6 +3,7 @@ package com.knowbase.knowbase.users.repository;
 import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,5 +21,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // 최신순 멘토 조회
     List<User> findByIsMentorTrueOrderByCreateAtDesc();
+
+    // 멘토를 리뷰의 만족도 높은 순서로 정렬하여 조회
+    @Query("SELECT r.mentorId FROM Review r WHERE r.mentorId.isMentor = true GROUP BY r.mentorId ORDER BY AVG(r.satisfaction) DESC")
+    List<User> findMentorsBySatisfactionDesc();
+
+    // 멘토를 리뷰의 만족도 낮은 순서로 정렬하여 조회
+    @Query("SELECT r.mentorId FROM Review r WHERE r.mentorId.isMentor = true GROUP BY r.mentorId ORDER BY AVG(r.satisfaction) ASC")
+    List<User> findMentorsBySatisfactionAsc();
 }
 

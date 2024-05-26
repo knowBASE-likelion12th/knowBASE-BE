@@ -36,4 +36,8 @@ public interface UserService {
 
     //카테고리 별 회원 조회
     ResponseEntity<CustomApiResponse<?>> searchMentorsByCategory(String interest, String housingType, String spaceType, String style);
+
+    //리뷰 별점 순 조회
+    ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionDesc();
+    ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc();
 }

@@ -304,5 +304,45 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "멘토 검색에 성공하였습니다."));
     }
+
+    //만족도 높은 순 멘토 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionDesc() {
+        List<User> mentors = userRepository.findMentorsBySatisfactionDesc();
+        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
+                .map(user -> MentorListDto.MentorResponse.builder()
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .nickName(user.getNickname())
+                        .profileImgPath(user.getProfImgPath())
+                        .mentorContent(user.getMentorContent())
+                        .mentoringPath(user.getMentoringPath())
+                        .isMentor(user.getIsMentor())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 높은 순 멘토 조회에 성공하였습니다."));
+    }
+
+    //만족도 낮은 순 멘토 조회
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc() {
+        List<User> mentors = userRepository.findMentorsBySatisfactionAsc();
+        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
+                .map(user -> MentorListDto.MentorResponse.builder()
+                        .userId(user.getUserId())
+                        .userName(user.getUserName())
+                        .nickName(user.getNickname())
+                        .profileImgPath(user.getProfImgPath())
+                        .mentorContent(user.getMentorContent())
+                        .mentoringPath(user.getMentoringPath())
+                        .isMentor(user.getIsMentor())
+                        .build())
+                .collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 낮은 순 멘토 조회에 성공하였습니다."));
+    }
 }
 
