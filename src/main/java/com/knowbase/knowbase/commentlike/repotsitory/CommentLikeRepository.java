@@ -18,6 +18,8 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
 
     Long countByComment (Comment comment); //댓글의 좋아요 갯수를 셈
 
+    void deleteByComment(Comment comment);
+
 /*    //좋아요 누르면 -> true로 바꿔주기
     @Transactional //데이터베이스에서 업데이트나 삭제 작업을 실행할 땐 트랜잭션이 필요함
     @Modifying

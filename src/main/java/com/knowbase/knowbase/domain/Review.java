@@ -70,4 +70,16 @@ public class Review extends BaseEntity {
         this.mentorId = mentorId;
         this.menteeId = menteeId;
     }
+
+    public void changeReview(String reviewTitle, String date, String beforeReImgPath, String afterReImgPath, String reviewContent, Long satisfaction, String period, String budget) {
+        this.reviewTitle = reviewTitle;
+        this.date = date;
+        this.beforeReImgPath = beforeReImgPath;
+        this.afterReImgPath = afterReImgPath;
+        this.reviewContent = reviewContent;
+        this.satisfaction = satisfaction;
+        this.period = period;
+        this.budget = budget;
+    }
+
 }

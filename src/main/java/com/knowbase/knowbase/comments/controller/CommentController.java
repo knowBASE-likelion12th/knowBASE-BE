@@ -33,8 +33,8 @@ public class CommentController {
 
     //댓글 삭제
     @DeleteMapping
-    public ResponseEntity<CustomApiResponse<?>> deleteComment(@RequestBody @Valid DeleteCommentDto deleteCommentDto){
-        return commentService.deleteComment(deleteCommentDto);
+    public ResponseEntity<CustomApiResponse<?>> deleteComment(@RequestParam("commentId") Long commentId){
+        return commentService.deleteComment(commentId);
     }
 
     //해당 게시물에 달린 모든 댓글 조회
