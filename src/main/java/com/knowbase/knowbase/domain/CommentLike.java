@@ -39,4 +39,10 @@ public class CommentLike extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "COMMENT_ID")
     private Comment comment;
+
+    //유저와 댓글에 대한 연관관계 설정
+    public void createCommentLike(User user, Comment comment) {
+        this.user = user;
+        this.comment = comment;
+    }
 }

@@ -40,8 +40,26 @@ public class CommentLikeServiceImpl implements CommentLikeService {
                                 "삭제되었거나 존재하지 않는 댓글입니다."));
         }
 
+        //댓글 좋아요 누르면 commentLike 테이블에 생겨야함
+        Optional<CommentLike> findCommentLike = commentLikeRepository.findByUserAndComment(findUser.get(),findComment.get());
 
-        //CommentLike temp = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
+        //현재 로그인한 유저가 해당 댓글에 좋아요를 달지 않은 상태라면
+        if (findCommentLike.isEmpty()) {
+            CommentLike commentLike = CommentLike.builder()
+                    .comment(findComment.get())
+                    .user(findUser.get())
+                    .build();
+
+            commentLikeRepository.save(commentLike);
+        }else {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(),
+                            "이미 좋아요한 상태입니다."));
+        }
+
+
+/*        //CommentLike temp = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
 
         //Comment comment = findComment.get();
         CommentLike commentLike  = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
@@ -61,7 +79,7 @@ public class CommentLikeServiceImpl implements CommentLikeService {
                     .status(HttpStatus.BAD_REQUEST)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(),
                             "이미 좋아요한 상태입니다."));
-        }
+        }*/
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -87,16 +105,16 @@ public class CommentLikeServiceImpl implements CommentLikeService {
                             "삭제되었거나 존재하지 않는 댓글입니다."));
         }
 
-        CommentLike commentLike  = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
+        Optional<CommentLike> commentLike  = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
 
-        if(commentLike == null || commentLike.getIsLike() == null || !commentLike.getIsLike()) {
+        if(commentLike.isEmpty()) {
             return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(),
                             "이미 좋아요가 취소된 상태입니다."));
         }
-        else if (commentLike.getIsLike()){
-            commentLikeRepository.setIsLikeFalse(commentLike.getId());
+        else {
+            commentLikeRepository.delete(commentLike.get());
         }
 
         return ResponseEntity
@@ -105,7 +123,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
                         HttpStatus.OK.value(),
                         null,
                         "좋아요 취소"));
-
 
     }
 }

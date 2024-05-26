@@ -10,11 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> {
-    CommentLike findByUserAndComment(User user, Comment comment);
+    Optional<CommentLike> findByUserAndComment(User user, Comment comment);
 
-    //좋아요 누르면 -> true로 바꿔주기
+/*    //좋아요 누르면 -> true로 바꿔주기
     @Transactional //데이터베이스에서 업데이트나 삭제 작업을 실행할 땐 트랜잭션이 필요함
     @Modifying
     @Query("update CommentLike cl set cl.isLike = true where cl.id = :commentLikeId")
@@ -24,5 +26,5 @@ public interface CommentLikeRepository extends JpaRepository<CommentLike, Long> 
     @Transactional
     @Modifying
     @Query("update CommentLike cl set cl.isLike = false where cl.id = :commentLikeId")
-    void setIsLikeFalse(@Param("commentLikeId") Long commentLikeId);
+    void setIsLikeFalse(@Param("commentLikeId") Long commentLikeId);*/
 }
