@@ -70,4 +70,10 @@ public class User extends BaseEntity {
 
     @Column(name="MENTO_STYLE")
     private String mentoStyle;
+
+    public void updateProfile(String userName, String nickname, String profImgPath) {
+        this.userName = userName;
+        this.nickname = nickname;
+        this.profImgPath = profImgPath;
+    }
 }

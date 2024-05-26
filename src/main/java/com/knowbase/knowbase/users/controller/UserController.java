@@ -3,6 +3,7 @@ package com.knowbase.knowbase.users.controller;
 import com.knowbase.knowbase.users.dto.MenteeSignUpDto;
 import com.knowbase.knowbase.users.dto.MentorSignUpDto;
 import com.knowbase.knowbase.users.dto.UserSignInDto;
+import com.knowbase.knowbase.users.dto.UserUpdateDto;
 import com.knowbase.knowbase.users.service.UserService;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import jakarta.servlet.http.HttpSession;
@@ -72,6 +73,16 @@ public class UserController {
         return result;
     }
 
+
+    // 회원 정보 수정
+    @PutMapping("/update/{userId}")
+    private ResponseEntity<CustomApiResponse<?>> updateUser(
+            @PathVariable("userId") Long userId,
+            @Valid @RequestBody UserUpdateDto userUpdateDto) {
+        return userService.updateUser(userId, userUpdateDto);
+    }
+
+
     //멘토 수정페이지 접근 권한 검증
     @GetMapping("/validateEditAccess")
     public ResponseEntity<CustomApiResponse<?>> validateEditAccess(@RequestParam("userId") Long userId, HttpSession session) {
@@ -81,5 +92,15 @@ public class UserController {
                     .body(CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "로그인 정보가 없습니다."));
         }
         return userService.validateEditAccess(loggedInUserId, userId);
+    }
+
+    //카테고리 별 멘토 조회
+    @GetMapping("/search/category")
+    public ResponseEntity<CustomApiResponse<?>> searchMentorsByCategory(
+            @RequestParam(required = false) String interest,
+            @RequestParam(required = false) String housingType,
+            @RequestParam(required = false) String spaceType,
+            @RequestParam(required = false) String style) {
+        return userService.searchMentorsByCategory(interest, housingType, spaceType, style);
     }
 }
