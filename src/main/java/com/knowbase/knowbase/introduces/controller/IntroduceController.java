@@ -27,7 +27,7 @@ public class IntroduceController {
     @PutMapping
     public ResponseEntity<CustomApiResponse<?>> updateIntroduce(
             @RequestParam("introId") Long introId,
-            @RequestBody IntroduceUpdateDto.Req introduceUpdateDto) {
+            @Valid @RequestBody IntroduceUpdateDto.Req introduceUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> introduce = introduceService.updateIntroduce(introId, introduceUpdateDto);
         return introduce;
     }
