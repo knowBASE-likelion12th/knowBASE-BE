@@ -5,10 +5,7 @@ import com.knowbase.knowbase.review.service.ReviewService;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/review")
@@ -19,6 +16,11 @@ public class ReviewController {
     @PostMapping
     public ResponseEntity<CustomApiResponse<?>> createReview(@RequestBody ReviewCreateDto.Req req) {
         return reviewService.createReview(req);
+    }
+
+    @GetMapping("/highstar")
+    public ResponseEntity<CustomApiResponse<?>> getHighStarAvg(@RequestParam("userId") Long mentorId) {
+        return reviewService.getHighStarAvg(mentorId);
     }
 
 }

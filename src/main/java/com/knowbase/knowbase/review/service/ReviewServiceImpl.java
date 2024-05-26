@@ -3,6 +3,7 @@ package com.knowbase.knowbase.review.service;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.domain.Review;
 import com.knowbase.knowbase.domain.User;
+import com.knowbase.knowbase.review.dto.HighStarAvgDto;
 import com.knowbase.knowbase.review.dto.ReviewCreateDto;
 import com.knowbase.knowbase.review.repository.ReviewRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -65,5 +67,34 @@ public class ReviewServiceImpl implements ReviewService{
                         responseDto,
                         "후기가 작성 되었습니다."));
 
+    }
+
+    // 멘토의 평점
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> getHighStarAvg(Long mentorId) {
+        // 멘토Id로 User 객체 찾기
+        Optional<User> mentor = userRepository.findById(mentorId);
+        // 멘토Id로 후기 찾기
+        List<Review> findHighStar = reviewRepository.findByMentorId(mentor.get());
+
+
+        // 평점 합산 변수
+        double totalStars = 0.0;
+
+        // 평점 합산
+        for (Review review : findHighStar) {
+            totalStars += review.getSatisfaction(); // 각 후기의 평점을 가져와서 합산
+        }
+
+        // 평점 평균 계산
+        double averageStar = totalStars / findHighStar.size();
+
+        HighStarAvgDto res = new HighStarAvgDto(averageStar);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(
+                        HttpStatus.OK.value(),
+                        res, "해당 멘토의 평점 조회 성공"));
     }
 }
