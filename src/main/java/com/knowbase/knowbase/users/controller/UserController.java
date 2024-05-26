@@ -109,4 +109,16 @@ public class UserController {
             @RequestParam(required = false) String style) {
         return userService.searchMentorsByCategory(interest, housingType, spaceType, style);
     }
+
+    //리뷰 별점 순 조회
+    @GetMapping("/mentors/satisfaction-desc")
+    public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionDesc() {
+        return userService.getMentorsBySatisfactionDesc();
+    }
+
+    //리뷰 별점 순 조회
+    @GetMapping("/mentors/satisfaction-asc")
+    public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc() {
+        return userService.getMentorsBySatisfactionAsc();
+    }
 }
