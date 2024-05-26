@@ -1,4 +1,4 @@
-package com.knowbase.knowbase.portfilos.dto;
+package com.knowbase.knowbase.portfolios.dto;
 
 import com.knowbase.knowbase.domain.Portfolio;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,11 +7,12 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-public class PortfolioUpdateDto {
-    @Getter @Setter @Builder
+public class PortfolioCreateDto {
+    @Getter @Setter
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Req{
+
         @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
         private Long userId;
 
@@ -27,11 +28,13 @@ public class PortfolioUpdateDto {
 
     @Getter @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class UpdatePortfolio{
-        private LocalDateTime updatedAt;
+    public static class CreatePortfolio{
+        private Long portfolioId;
+        private LocalDateTime createdAt;
 
-        public UpdatePortfolio(LocalDateTime updatedAt){
-            this.updatedAt = updatedAt;
+        public CreatePortfolio(Long portfolio, LocalDateTime createdAt){
+            this.portfolioId = portfolio;
+            this.createdAt = createdAt;
         }
     }
 }

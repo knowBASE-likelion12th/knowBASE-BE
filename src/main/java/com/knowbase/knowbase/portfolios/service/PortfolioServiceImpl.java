@@ -1,12 +1,12 @@
-package com.knowbase.knowbase.portfilos.service;
+package com.knowbase.knowbase.portfolios.service;
 
 import com.knowbase.knowbase.domain.Portfolio;
 import com.knowbase.knowbase.domain.User;
-import com.knowbase.knowbase.portfilos.dto.PortfolioCreateDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioDeleteDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioListDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioUpdateDto;
-import com.knowbase.knowbase.portfilos.repository.PortfolioRepository;
+import com.knowbase.knowbase.portfolios.dto.PortfolioCreateDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioDeleteDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioListDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioUpdateDto;
+import com.knowbase.knowbase.portfolios.repository.PortfolioRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import lombok.Builder;

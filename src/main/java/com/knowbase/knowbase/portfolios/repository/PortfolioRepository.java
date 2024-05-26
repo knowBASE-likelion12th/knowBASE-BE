@@ -1,4 +1,4 @@
-package com.knowbase.knowbase.portfilos.repository;
+package com.knowbase.knowbase.portfolios.repository;
 
 import com.knowbase.knowbase.domain.Portfolio;
 import com.knowbase.knowbase.domain.User;

@@ -1,9 +1,9 @@
-package com.knowbase.knowbase.portfilos.controller;
+package com.knowbase.knowbase.portfolios.controller;
 
-import com.knowbase.knowbase.portfilos.dto.PortfolioCreateDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioDeleteDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioUpdateDto;
-import com.knowbase.knowbase.portfilos.service.PortfolioService;
+import com.knowbase.knowbase.portfolios.dto.PortfolioCreateDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioDeleteDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioUpdateDto;
+import com.knowbase.knowbase.portfolios.service.PortfolioService;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

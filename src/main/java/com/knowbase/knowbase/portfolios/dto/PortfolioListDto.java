@@ -1,4 +1,4 @@
-package com.knowbase.knowbase.portfilos.dto;
+package com.knowbase.knowbase.portfolios.dto;
 
 import lombok.*;
 
