@@ -26,11 +26,15 @@ public class Review extends BaseEntity {
             strategy = GenerationType.SEQUENCE,
             generator = "REVIEW_ID"
     )
+
     @Column(name="REVIEW_ID")
     private Long reviewId;
 
     @Column(name="REVIEW_TITLE")
     private String reviewTitle;
+
+    @Column(name="NICKNAME")
+    private String nickname;
 
     @Column(name="BEFORE_RE_IMG_PATH")
     private String beforeReImgPath;
@@ -51,6 +55,16 @@ public class Review extends BaseEntity {
     private String budget;
 
     @ManyToOne //후기가 '다'에 해당
-    @JoinColumn(name="USER_ID")
-    private User user;
+    @JoinColumn(name="MENTEE_ID")
+    private User menteeId;
+
+    @ManyToOne
+    @JoinColumn(name="MENTOR_ID")
+    private User mentorId;
+
+    //연관관계 설정
+    public void createReview(User mentorId, User menteeId) {
+        this.mentorId = mentorId;
+        this.menteeId = menteeId;
+    }
 }

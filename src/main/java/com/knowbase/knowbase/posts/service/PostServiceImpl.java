@@ -131,6 +131,7 @@ public class PostServiceImpl implements PostService{
                 post.getPostContent(),
                 post.getPostImgPath(),
                 user.getNickname(),
+                post.getUserId().getUserId(),
                 user.getProfImgPath(),
                 post.getUpdateAt()
                 );

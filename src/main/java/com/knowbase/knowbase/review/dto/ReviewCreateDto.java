@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.review.dto;
 
+import com.knowbase.knowbase.domain.Review;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -11,6 +12,12 @@ public class ReviewCreateDto {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Req{
+
+        @NotNull(message = "후기를 작성할 멘토의 userId를 입력해주세요")
+        private Long mentorId;
+
+        @NotNull(message = "후기를 작성하는 멘티의 userId를 입력해주세요")
+        private Long menteeId;
 
         @NotNull(message = "리뷰 제목을 입력해주세요")
         private String reviewTitle;
@@ -31,7 +38,7 @@ public class ReviewCreateDto {
         private String reviewContent;
 
         @NotNull(message = "만족도를 넣어주세요")
-        private String satisfaction;
+        private Long satisfaction;
 
         @NotNull(message = "멘토링 기간을 입력해주세요")
         private String period;
