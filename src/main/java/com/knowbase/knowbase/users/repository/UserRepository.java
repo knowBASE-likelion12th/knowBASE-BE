@@ -14,4 +14,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     //모든 멘토 조회: 회원의 isMentor가 true(멘토)인 회원을 찾는 repository 메소드
     List<User> findByIsMentorTrue();
+
+    // 모든 멘티 조회
+    List<User> findByIsMentorFalse();
 }
+

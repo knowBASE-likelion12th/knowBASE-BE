@@ -1,8 +1,8 @@
-package com.knowbase.knowbase.portfilos.service;
+package com.knowbase.knowbase.portfolios.service;
 
-import com.knowbase.knowbase.portfilos.dto.PortfolioCreateDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioDeleteDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioUpdateDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioCreateDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioDeleteDto;
+import com.knowbase.knowbase.portfolios.dto.PortfolioUpdateDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import org.springframework.http.ResponseEntity;
 

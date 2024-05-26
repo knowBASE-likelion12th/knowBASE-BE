@@ -3,9 +3,6 @@ package com.knowbase.knowbase.homestylings.service;
 import com.knowbase.knowbase.homestylings.dto.HomestylingCreateDto;
 import com.knowbase.knowbase.homestylings.dto.HomestylingDeleteDto;
 import com.knowbase.knowbase.homestylings.dto.HomestylingUpdateDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioCreateDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioDeleteDto;
-import com.knowbase.knowbase.portfilos.dto.PortfolioUpdateDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import org.springframework.http.ResponseEntity;
 
