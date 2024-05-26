@@ -1,19 +1,18 @@
 package com.knowbase.knowbase.comments.service;
 
+import com.knowbase.knowbase.adoption.repository.AdoptionRepository;
 import com.knowbase.knowbase.commentlike.repotsitory.CommentLikeRepository;
 import com.knowbase.knowbase.comments.dto.CommentListDto;
 import com.knowbase.knowbase.comments.dto.DeleteCommentDto;
 import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.comments.repository.CommentRepository;
-import com.knowbase.knowbase.domain.Comment;
-import com.knowbase.knowbase.domain.CommentLike;
-import com.knowbase.knowbase.domain.Post;
-import com.knowbase.knowbase.domain.User;
+import com.knowbase.knowbase.domain.*;
 import com.knowbase.knowbase.posts.dto.PostListDto;
 import com.knowbase.knowbase.posts.repository.PostRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
+import jakarta.transaction.Transactional;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import javax.print.attribute.standard.MediaSize;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final CommentLikeRepository commentLikeRepository;
+    private final AdoptionRepository adoptionRepository;
 
     //댓글 작성
     @Override
@@ -118,10 +119,11 @@ public class CommentServiceImpl implements CommentService {
     }
 
     //댓글 삭제
+    @Transactional
     @Override
-    public ResponseEntity<CustomApiResponse<?>> deleteComment(DeleteCommentDto deleteCommentDto) {
+    public ResponseEntity<CustomApiResponse<?>> deleteComment(Long commentId) {
         //해당 댓글이 DB에 존재하는 댓글인지
-        Optional<Comment> findComment = commentRepository.findById(deleteCommentDto.getCommentId());
+        Optional<Comment> findComment = commentRepository.findById(commentId);
         if(findComment.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.BAD_REQUEST)
@@ -130,7 +132,7 @@ public class CommentServiceImpl implements CommentService {
                                 "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
         }
         // 댓글의 작성자와 현재 접속한 사용자가 같은지 확인
-        if (findComment.get().getUser().getUserId() != deleteCommentDto.getUserId()  ) {
+        if (findComment.get().getUser().getUserId() != commentId ) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(
@@ -138,9 +140,11 @@ public class CommentServiceImpl implements CommentService {
                             "잘못된 요청입니다."));
         }
 
-        //댓글 삭제
+        //댓글 삭제 : comment 테이블의 키가 commentlike 테이블에서 참조되고 있기 때문에
+        //commentlike 테이블에서 먼저 삭제 한 후
+        commentLikeRepository.deleteByComment(findComment.get());
+        //comment 테이블에서 삭제 해줘야함
         commentRepository.delete(findComment.get());
-
 
         return ResponseEntity
                 .status(HttpStatus.OK)
@@ -172,6 +176,8 @@ public class CommentServiceImpl implements CommentService {
 
         for (Comment comment : findComments) {
             Optional<CommentLike> findCommentLike = commentLikeRepository.findByUserAndComment(findUser.get(), comment);
+            Optional<Adoption> findAdoption = adoptionRepository.findByUserAndComment(findUser.get(), comment);
+            boolean isAdopt = findAdoption.isPresent(); //채택 존재 여부
             boolean isLiked = findCommentLike.isPresent(); //좋아요 존재 여부 가져오기
             Long likeCount = commentLikeRepository.countByComment(comment); //좋아요 갯수 가져오기
 
@@ -184,8 +190,13 @@ public class CommentServiceImpl implements CommentService {
                     .commentContent(comment.getCommentContent())
                     .likeCount(likeCount)
                     .isLike(isLiked)
+                    .isAdopt(isAdopt)
                     .build());
         }
+
+        // isAdopt가 true인 댓글을 우선으로 정렬
+        commentResponse.sort(Comparator.comparing(commentDto -> commentDto.getIsAdopt() ? 0 : 1));
+
 
         CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
         CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 게시물의 모든 댓글 조회 성공");
@@ -211,7 +222,9 @@ public class CommentServiceImpl implements CommentService {
         List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
 
         for(Comment comment : findComment){
+            Optional<Adoption> findAdoption = adoptionRepository.findByUserAndComment(findUser.get(), comment);
             Optional<CommentLike> findCommentLike = commentLikeRepository.findByUserAndComment(findUser.get(), comment);
+            boolean isAdopt = findAdoption.isPresent(); //채택 존재 여부
             boolean isLiked = findCommentLike.isPresent();
             Long likeCount = commentLikeRepository.countByComment(comment); //좋아요 갯수 가져오기
 
@@ -224,8 +237,12 @@ public class CommentServiceImpl implements CommentService {
                     .commentContent(comment.getCommentContent())
                     .likeCount(likeCount)
                     .isLike(isLiked)
+                    .isAdopt(isAdopt)
                     .build());
         }
+
+        // isAdopt가 true인 댓글을 우선으로 정렬
+        commentResponse.sort(Comparator.comparing(commentDto -> commentDto.getIsAdopt() ? 0 : 1));
 
         CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
         CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 유저가 쓴 댓글 조회 성공");

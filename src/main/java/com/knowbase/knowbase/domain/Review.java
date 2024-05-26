@@ -36,6 +36,9 @@ public class Review extends BaseEntity {
     @Column(name="NICKNAME")
     private String nickname;
 
+    @Column(name="date")
+    private String date;
+
     @Column(name="BEFORE_RE_IMG_PATH")
     private String beforeReImgPath;
 
@@ -67,4 +70,16 @@ public class Review extends BaseEntity {
         this.mentorId = mentorId;
         this.menteeId = menteeId;
     }
+
+    public void changeReview(String reviewTitle, String date, String beforeReImgPath, String afterReImgPath, String reviewContent, Long satisfaction, String period, String budget) {
+        this.reviewTitle = reviewTitle;
+        this.date = date;
+        this.beforeReImgPath = beforeReImgPath;
+        this.afterReImgPath = afterReImgPath;
+        this.reviewContent = reviewContent;
+        this.satisfaction = satisfaction;
+        this.period = period;
+        this.budget = budget;
+    }
+
 }
