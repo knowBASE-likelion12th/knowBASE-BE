@@ -16,6 +16,8 @@ public class CommentListDto {
         private String profImgPath;
         private Boolean isMentor;
         private String commentContent;
+        private Long likeCount;
+        private Boolean isLike;
     }
     // 댓글 조회
     @Getter @Setter

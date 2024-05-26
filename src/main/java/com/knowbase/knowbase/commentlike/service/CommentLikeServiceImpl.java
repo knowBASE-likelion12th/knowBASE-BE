@@ -58,29 +58,6 @@ public class CommentLikeServiceImpl implements CommentLikeService {
                             "이미 좋아요한 상태입니다."));
         }
 
-
-/*        //CommentLike temp = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
-
-        //Comment comment = findComment.get();
-        CommentLike commentLike  = commentLikeRepository.findByUserAndComment(findUser.get(), findComment.get());
-
-        //좋아요 로그가 없을 시 -> DB에 저장하고 isLike true로 변경
-        if(commentLike == null) {
-            commentLike = CommentLike.builder()
-                    .comment(findComment.get())
-                    .user(findUser.get())
-                    .build();
-            commentLikeRepository.save(commentLike); //저장
-            commentLikeRepository.serIsLikeTrue(commentLike.getId()); //true로
-        } else if (commentLike.getIsLike() == null || commentLike.getIsLike() == false ) {
-            commentLikeRepository.serIsLikeTrue(commentLike.getId());
-        }else {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(),
-                            "이미 좋아요한 상태입니다."));
-        }*/
-
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(

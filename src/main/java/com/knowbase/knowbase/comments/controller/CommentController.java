@@ -37,11 +37,17 @@ public class CommentController {
         return commentService.deleteComment(deleteCommentDto);
     }
 
+    //해당 게시물에 달린 모든 댓글 조회
     @GetMapping("/all")
-    public ResponseEntity<CustomApiResponse<?>> getAllComment(@RequestParam("postId") @Valid Long postId){
-        return commentService.getAllComment(postId);
+    public ResponseEntity<CustomApiResponse<?>> getAllComment(
+            @RequestParam("postId") @Valid Long postId,
+            @RequestParam("userId") @Valid Long userId
+            ){
+        return commentService.getAllComment(postId,userId);
     }
 
+
+    //내가 쓴 댓글만 조회
     @GetMapping("/my")
     public ResponseEntity<CustomApiResponse<?>> getMyComment(@RequestParam("userId") @Valid Long userId){
         return commentService.getMyComment(userId);

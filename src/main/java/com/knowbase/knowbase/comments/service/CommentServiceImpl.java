@@ -1,11 +1,13 @@
 package com.knowbase.knowbase.comments.service;
 
+import com.knowbase.knowbase.commentlike.repotsitory.CommentLikeRepository;
 import com.knowbase.knowbase.comments.dto.CommentListDto;
 import com.knowbase.knowbase.comments.dto.DeleteCommentDto;
 import com.knowbase.knowbase.comments.dto.UpdateCommentdto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
 import com.knowbase.knowbase.comments.repository.CommentRepository;
 import com.knowbase.knowbase.domain.Comment;
+import com.knowbase.knowbase.domain.CommentLike;
 import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.posts.dto.PostListDto;
@@ -30,6 +32,7 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     //댓글 작성
     @Override
@@ -149,33 +152,46 @@ public class CommentServiceImpl implements CommentService {
 
     //해당 게시물의 달린 모든 댓글 조회
     @Override
-    public ResponseEntity<CustomApiResponse<?>> getAllComment(Long postId) {
-        //해당 게시글이 DB에 존재하는지
+    public ResponseEntity<CustomApiResponse<?>> getAllComment(Long postId, Long userId) {
+        Optional<User> findUser = userRepository.findById(userId);
+        if (findUser.isEmpty()) {
+            CustomApiResponse<Void> res = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "사용자를 찾을 수 없습니다.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
+        }
+
+        // 해당 게시글이 DB에 존재하는지 확인
         Optional<Post> findPost = postRepository.findById(postId);
-        if(findPost.isEmpty()) {
+        if (findPost.isEmpty()) {
             CustomApiResponse<Void> res = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "해당하는 게시글을 찾을 수 없습니다.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(res);
         }
 
-        //해당 PostId를 가진 게시물에 달린 댓글 찾기
-        List<Comment> findComment = commentRepository.findByPost(findPost.get());
-
+        // 해당 PostId를 가진 게시물에 달린 댓글들 찾기
+        List<Comment> findComments = commentRepository.findByPost(findPost.get());
         List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
-        for(Comment comment : findComment){
+
+        for (Comment comment : findComments) {
+            Optional<CommentLike> findCommentLike = commentLikeRepository.findByUserAndComment(findUser.get(), comment);
+            boolean isLiked = findCommentLike.isPresent(); //좋아요 존재 여부 가져오기
+            Long likeCount = commentLikeRepository.countByComment(comment); //좋아요 갯수 가져오기
+
             commentResponse.add(CommentListDto.CommentDto.builder()
-                            .commentId(comment.getCommentId())
-                            .userId(comment.getUser().getUserId())
-                            .nickname(comment.getUser().getNickname())
-                            .profImgPath(comment.getUser().getProfImgPath())
-                             .isMentor(comment.getUser().getIsMentor())
-                            .commentContent(comment.getCommentContent())
-                            .build());
+                    .commentId(comment.getCommentId())
+                    .userId(comment.getUser().getUserId())
+                    .nickname(comment.getUser().getNickname())
+                    .profImgPath(comment.getUser().getProfImgPath())
+                    .isMentor(comment.getUser().getIsMentor())
+                    .commentContent(comment.getCommentContent())
+                    .likeCount(likeCount)
+                    .isLike(isLiked)
+                    .build());
         }
 
         CommentListDto.SearchCommentRes searchCommentRes = new CommentListDto.SearchCommentRes(commentResponse);
         CustomApiResponse<CommentListDto.SearchCommentRes> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), searchCommentRes, "해당 게시물의 모든 댓글 조회 성공");
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
+
 
     //내가 쓴 댓글 조회
     @Override
@@ -195,6 +211,10 @@ public class CommentServiceImpl implements CommentService {
         List<CommentListDto.CommentDto> commentResponse = new ArrayList<>();
 
         for(Comment comment : findComment){
+            Optional<CommentLike> findCommentLike = commentLikeRepository.findByUserAndComment(findUser.get(), comment);
+            boolean isLiked = findCommentLike.isPresent();
+            Long likeCount = commentLikeRepository.countByComment(comment); //좋아요 갯수 가져오기
+
             commentResponse.add(CommentListDto.CommentDto.builder()
                     .commentId(comment.getCommentId())
                     .userId(comment.getUser().getUserId())
@@ -202,6 +222,8 @@ public class CommentServiceImpl implements CommentService {
                     .profImgPath(comment.getUser().getProfImgPath())
                     .isMentor(comment.getUser().getIsMentor())
                     .commentContent(comment.getCommentContent())
+                    .likeCount(likeCount)
+                    .isLike(isLiked)
                     .build());
         }
 
