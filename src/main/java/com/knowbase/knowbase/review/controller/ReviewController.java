@@ -33,11 +33,13 @@ public class ReviewController {
     public ResponseEntity<CustomApiResponse<?>> deleteReview(@RequestParam("reviewId") Long reviewId){
         return reviewService.deleteReview(reviewId);
     }
+  
     //멘토의 평균 평점 조회
     @GetMapping("/highstar")
     public ResponseEntity<CustomApiResponse<?>> getHighStarAvg(@RequestParam("userId") Long mentorId) {
         return reviewService.getHighStarAvg(mentorId);
     }
+
 
     //내가 쓴 후기 조회(멘티)
     @GetMapping("/wrotereview")

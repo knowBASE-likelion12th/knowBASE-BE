@@ -2,7 +2,12 @@ package com.knowbase.knowbase.review.service;
 
 import com.knowbase.knowbase.comments.dto.CommentListDto;
 import com.knowbase.knowbase.comments.dto.WriteCommentdto;
+
 import com.knowbase.knowbase.domain.*;
+
+import com.knowbase.knowbase.domain.Review;
+import com.knowbase.knowbase.domain.User;
+
 import com.knowbase.knowbase.review.dto.HighStarAvgDto;
 import com.knowbase.knowbase.review.dto.ReviewCreateDto;
 import com.knowbase.knowbase.review.dto.ReviewListDto;
@@ -14,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,6 +106,7 @@ public class ReviewServiceImpl implements ReviewService{
                         HttpStatus.OK.value(),
                         res, "해당 멘토의 평점 조회 성공"));
     }
+
 
 
     //내가 쓴 후기(멘티)
