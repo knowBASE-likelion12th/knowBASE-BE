@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface ReviewService {
     ResponseEntity<CustomApiResponse<?>> createReview(ReviewCreateDto.Req req);
+
+    ResponseEntity<CustomApiResponse<?>> getHighStarAvg(Long mentorId);
 }
