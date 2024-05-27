@@ -224,6 +224,7 @@ public class ReviewServiceImpl implements ReviewService{
                 reviewUpdateDto.getSatisfaction(),
                 reviewUpdateDto.getPeriod(),
                 reviewUpdateDto.getBudget());
+        reviewRepository.flush(); //수정된 내용 DB에 즉시 적용
 
         //응답 DTO 생성
         ReviewUpdateDto.UpdateReview responseDto = new ReviewUpdateDto.UpdateReview(review.getUpdateAt());
