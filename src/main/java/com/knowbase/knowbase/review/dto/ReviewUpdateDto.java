@@ -19,9 +19,6 @@ public class ReviewUpdateDto {
         @NotNull(message = "리뷰 제목을 입력해주세요")
         private String reviewTitle;
 
-        @NotNull(message = "작성 날짜를 입력해주세요")
-        private String date;
-
         @NotNull(message = "멘토링 전 사진의 경로를 넣어주세요")
         private String beforeReImgPath;
 
@@ -39,9 +36,12 @@ public class ReviewUpdateDto {
 
         @NotNull(message = "예산을 입력해주세요")
         private String budget;
+
+        @NotNull(message = "수정하려는 멘티의 id를 넣어주세요")
+        private Long menteeId;
     }
 
-    @Getter
+/*    @Getter
     @Builder
     @NoArgsConstructor
     public static class UpdateReview{
@@ -49,5 +49,5 @@ public class ReviewUpdateDto {
         public UpdateReview(LocalDateTime updateAt) {
             this.updateAt = updateAt;
         }
-    }
+    }*/
 }

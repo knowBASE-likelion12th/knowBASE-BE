@@ -8,5 +8,5 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HighStarAvgDto {
-    private double Highstar;
+    private double highStar;
 }

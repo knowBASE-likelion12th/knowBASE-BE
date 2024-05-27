@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -42,11 +44,13 @@ public class PostServiceImpl implements PostService{
         newPost.createPost(findUser.get()); //연관관계 설정
         Post savedPost = postRepository.save(newPost);
 
-        //응답 dto
-        PostCreateDto.CreatPost createdPostResponse = new PostCreateDto.CreatPost(savedPost.getPostId(),savedPost.getCreateAt());
+        //응답 dto 불필요
+        //PostCreateDto.CreatPost createdPostResponse = new PostCreateDto.CreatPost(savedPost.getPostId(),savedPost.getCreateAt());
         //응답
-        CustomApiResponse<PostCreateDto.CreatPost> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), createdPostResponse,"게시글이 작성되었습니다.");
-        return ResponseEntity.ok(res);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"게시글이 작성되었습니다"));
     }
 
     //게시물 수정
@@ -71,7 +75,7 @@ public class PostServiceImpl implements PostService{
         }
         //게시물의 작성자와 수정하려는 유저가 일치하는지 확인
         Long postMemberId = findPost.get().getUserId().getUserId(); //게시물 작성자의 ID
-        if(postMemberId != postUpdateDto.getUserId() ){
+        if(postMemberId != postUpdateDto.getUserId()){
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(
@@ -91,13 +95,10 @@ public class PostServiceImpl implements PostService{
 
         postRepository.flush(); //변경 사항 db에 즉시 적용
 
-        //응답 dto 생성
-        PostUpdateDto.UpdatePost updatePostResponse = PostUpdateDto.UpdatePost.builder()
-                .updateAt(post.getUpdateAt())
-                .build();
-        //응답
-        CustomApiResponse<PostUpdateDto.UpdatePost> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), updatePostResponse, "게시글이 수정되었습니다.");
-        return ResponseEntity.ok(res);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"해당 게시글이 수정되었습니다"));
+
     }
 
     //게시물 삭제
@@ -109,8 +110,8 @@ public class PostServiceImpl implements PostService{
         //존재하지 않는 게시물이라면
         if(findPost.isEmpty()){
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(),
                             "해당 게시글은 존재하지 않습니다."));
         }
 
@@ -139,6 +140,12 @@ public class PostServiceImpl implements PostService{
 
         Post post = findPost.get();
         User user = findUser.get();
+
+        //updateAt yyyy.mm.dd 형식으로
+        LocalDateTime updateAt = post.getUpdateAt();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        String formattedUpdateAt = updateAt.format(formatter);
+
         PostListDto.PostDto postResponse = new PostListDto.PostDto(
                 post.getPostId(),
                 post.getPostTitle(),
@@ -147,7 +154,7 @@ public class PostServiceImpl implements PostService{
                 user.getNickname(),
                 post.getUserId().getUserId(),
                 user.getProfImgPath(),
-                post.getUpdateAt()
+                formattedUpdateAt
                 );
 
 
@@ -168,8 +175,8 @@ public class PostServiceImpl implements PostService{
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
                     .nickname(post.getUserId().getNickname())
+                    .userId(post.getUserId().getUserId())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
-                    .updatedAt(post.getUpdateAt())
                     .build());
         }
 
@@ -192,8 +199,8 @@ public class PostServiceImpl implements PostService{
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
                     .nickname(post.getUserId().getNickname())
+                    .userId(post.getUserId().getUserId())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
-                    .updatedAt(post.getUpdateAt())
                     .build());
         }
 
@@ -220,8 +227,8 @@ public class PostServiceImpl implements PostService{
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
                     .nickname(post.getUserId().getNickname())
+                    .userId(post.getUserId().getUserId())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
-                    .updatedAt(post.getUpdateAt())
                     .build());
         }
 
@@ -246,8 +253,8 @@ public class PostServiceImpl implements PostService{
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
                     .nickname(post.getUserId().getNickname())
+                    .userId(post.getUserId().getUserId())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
-                    .updatedAt(post.getUpdateAt())
                     .build());
         }
 
@@ -272,8 +279,8 @@ public class PostServiceImpl implements PostService{
                     .postContent(post.getPostContent())
                     .postImgPath(post.getPostImgPath())
                     .nickname(post.getUserId().getNickname())
+                    .userId(post.getUserId().getUserId())
                     .postAuthorProfImg(post.getUserId().getProfImgPath())
-                    .updatedAt(post.getUpdateAt())
                     .build());
         }
 

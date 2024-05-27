@@ -25,8 +25,8 @@ public class ReviewCreateDto {
         @NotNull(message = "작성자의 닉네임 입력해주세요")
         private String nickname;
 
-        @NotNull(message = "작성 날짜를 입력해주세요")
-        private String date;
+        //api를 호출하는 그 시점의 날짜
+        LocalDateTime date = LocalDateTime.now();
 
         @NotNull(message = "멘토링 전 사진의 경로를 넣어주세요")
         private String beforeReImgPath;
@@ -48,7 +48,7 @@ public class ReviewCreateDto {
 
     }
 
-    @Getter
+/*    @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CreateReview{
         private Long reviewId;
@@ -58,7 +58,7 @@ public class ReviewCreateDto {
             this.reviewId = reviewId;
             this.createAt = createAt;
         }
-    }
+    }*/
 
 
 

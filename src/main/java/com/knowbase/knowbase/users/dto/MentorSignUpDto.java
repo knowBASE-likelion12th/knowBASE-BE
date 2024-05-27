@@ -22,7 +22,6 @@ public class MentorSignUpDto {
     @NotNull(message = "유저의 이름을 입력해주세요.")
     private String name;
 
-    @NotEmpty(message = "비어있을 수 없습니다.")
     @NotNull(message = "멘토인지 멘티인지 구별해주세요")
     private Boolean isMentor;
 
@@ -34,7 +33,6 @@ public class MentorSignUpDto {
     @NotNull(message = "재직증명서를 첨부해주세요.")
     private String employmentPath;
 
-    @NotEmpty(message = "비어있을 수 없습니다.")
     @NotNull(message = "성별을 선택해주세요.")
     private Boolean gender;
 

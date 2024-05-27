@@ -36,7 +36,8 @@ public class PostCreateDto
         }
     }
 
-    @Getter
+    //불필요
+/*    @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CreatPost {
@@ -47,7 +48,7 @@ public class PostCreateDto
             this.postId = postId;
             this.createdAt = createdAt;
         }
-    }
+    }*/
 
 }
 
