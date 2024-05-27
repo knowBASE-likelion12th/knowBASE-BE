@@ -277,20 +277,28 @@ public class UserServiceImpl implements UserService {
     // 회원 정보 수정
     @Override
     public ResponseEntity<CustomApiResponse<?>> updateUser(Long userId, UserUpdateDto userUpdateDto) {
-        Optional<User> findUser = userRepository.findById(userId);
+        try {
+            Optional<User> findUser = userRepository.findById(userId);
 
-        if (findUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다."));
+            if (findUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다."));
+            }
+
+            User user = findUser.get();
+            user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoringPath(), userUpdateDto.getMentorContent());
+
+            userRepository.save(user);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "회원 정보가 성공적으로 수정되었습니다."));
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
-
-        User user = findUser.get();
-        user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoring_path(), userUpdateDto.getMentorContent());
-
-        userRepository.save(user);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "회원 정보가 성공적으로 수정되었습니다."));
     }
 
     // 카테고리별 멘토 조회
