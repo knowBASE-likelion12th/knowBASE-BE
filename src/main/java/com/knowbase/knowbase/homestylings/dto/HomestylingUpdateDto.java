@@ -32,14 +32,4 @@ public class HomestylingUpdateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-    public static class UpdateHomestyling{
-        private LocalDateTime updatedAt;
-
-        public UpdateHomestyling(LocalDateTime updatedAt){
-            this.updatedAt = updatedAt;
-        }
-    }
 }
