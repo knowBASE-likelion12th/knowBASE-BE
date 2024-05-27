@@ -13,7 +13,6 @@ public class PortfolioListDto {
     public static class PortfolioDto {
         private Long portfolioId;
         private String portfolioImagePath;
-        private LocalDateTime updatedAt;
     }
 
     //포트폴리오 조회

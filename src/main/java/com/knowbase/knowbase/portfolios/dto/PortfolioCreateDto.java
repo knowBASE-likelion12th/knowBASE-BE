@@ -25,16 +25,4 @@ public class PortfolioCreateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class CreatePortfolio{
-        private Long portfolioId;
-        private LocalDateTime createdAt;
-
-        public CreatePortfolio(Long portfolio, LocalDateTime createdAt){
-            this.portfolioId = portfolio;
-            this.createdAt = createdAt;
-        }
-    }
 }

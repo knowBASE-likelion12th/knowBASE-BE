@@ -34,7 +34,7 @@ public class IntroduceController {
 
 
     // 특정 유저의 소개 글 조회(모든 유저가 조회 가능)
-    @GetMapping("/mentor")
+    @GetMapping
     public ResponseEntity<CustomApiResponse<?>> getIntroduce(
             @RequestParam("userId") Long userId) {
         ResponseEntity<CustomApiResponse<?>> introduce = introduceService.getIntroduce(userId);

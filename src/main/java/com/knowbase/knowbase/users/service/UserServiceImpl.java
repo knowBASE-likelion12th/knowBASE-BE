@@ -287,7 +287,6 @@ public class UserServiceImpl implements UserService {
 
             User user = findUser.get();
             user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoringPath(), userUpdateDto.getMentorContent());
-
             userRepository.save(user);
 
             return ResponseEntity.status(HttpStatus.OK)
