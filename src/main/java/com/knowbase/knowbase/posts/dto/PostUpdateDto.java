@@ -33,7 +33,7 @@ public class PostUpdateDto {
             }
     }
 
-    @Getter
+  /*  @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdatePost {
@@ -41,6 +41,6 @@ public class PostUpdateDto {
         public UpdatePost(LocalDateTime updateAt) {
             this.updateAt = updateAt;
         }
-    }
+    }*/
 
 }

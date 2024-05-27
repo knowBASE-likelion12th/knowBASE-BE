@@ -18,7 +18,7 @@ public class PostListDto {
         private String nickname;
         private Long userId;
         private String postAuthorProfImg;
-        private LocalDateTime updatedAt;
+        private String updateAt;
     }
 
     // 게시글 조회 : List<Post> posts

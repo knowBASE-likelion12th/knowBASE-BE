@@ -64,16 +64,13 @@ public class ReviewServiceImpl implements ReviewService{
         createReview.createReview(findmentor.get(), findmentee.get());
 
         //엔티티 저장
-        Review savedReview = reviewRepository.save(createReview);
-
-        //응답 dto 생성
-        ReviewCreateDto.CreateReview responseDto = new ReviewCreateDto.CreateReview(savedReview.getReviewId(),savedReview.getCreateAt());
+        reviewRepository.save(createReview);
 
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(
                         HttpStatus.OK.value(),
-                        responseDto,
+                        null,
                         "후기가 작성 되었습니다."));
 
     }
@@ -116,8 +113,8 @@ public class ReviewServiceImpl implements ReviewService{
         Optional<User> findUser = userRepository.findById(menteeId);
         if(findUser.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(),
                             "존재하지 않는 회원입니다."));
         }
         List<Review> findReview = reviewRepository.findByMenteeId(findUser.get());
@@ -151,8 +148,8 @@ public class ReviewServiceImpl implements ReviewService{
         Optional<User> findUser = userRepository.findById(mentorId);
         if(findUser.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(),
                             "존재하지 않는 회원입니다."));
         }
         List<Review> findReview = reviewRepository.findByMentorId(findUser.get());
@@ -187,8 +184,8 @@ public class ReviewServiceImpl implements ReviewService{
         //존재하지 않는 후기라면
         if(findReview.isEmpty()){
             return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(),
                             "해당 후기는 존재하지 않습니다."));
         }
 
@@ -208,11 +205,24 @@ public class ReviewServiceImpl implements ReviewService{
         // 존재하지 않는다면 => 이미 삭제되었거나, 잘못된 요청
         if(findReview.isEmpty()){
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.BAD_REQUEST.value(),
-                            "수정하려는 후기가 존재하지 않거나, 잘못된 요청입니다."));
+                            HttpStatus.NOT_FOUND.value(),
+                            "수정하려는 후기가 존재하지 않습니다."));
         }
+
+        Long reviewMemberId = findReview.get().getMenteeId().getUserId(); //게시물 작성자의 ID
+        if(reviewMemberId != reviewUpdateDto.getMenteeId()){
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body(CustomApiResponse.createFailWithout(
+                            HttpStatus.FORBIDDEN.value(),
+                            "해당 유저는 수정 권한이 없습니다."));
+        }
+
+
+
+
 
         Review review = findReview.get();
         review.changeReview(
@@ -226,10 +236,9 @@ public class ReviewServiceImpl implements ReviewService{
                 reviewUpdateDto.getBudget());
         reviewRepository.flush(); //수정된 내용 DB에 즉시 적용
 
-        //응답 DTO 생성
-        ReviewUpdateDto.UpdateReview responseDto = new ReviewUpdateDto.UpdateReview(review.getUpdateAt());
 
-        CustomApiResponse<ReviewUpdateDto.UpdateReview> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), responseDto, "후기가 수정되었습니다.");
-        return ResponseEntity.status(HttpStatus.OK).body(res);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"후기가 수정되었습니다"));
     }
 }

@@ -39,9 +39,12 @@ public class ReviewUpdateDto {
 
         @NotNull(message = "예산을 입력해주세요")
         private String budget;
+
+        @NotNull(message = "수정하려는 멘티의 id를 넣어주세요")
+        private Long menteeId;
     }
 
-    @Getter
+/*    @Getter
     @Builder
     @NoArgsConstructor
     public static class UpdateReview{
@@ -49,5 +52,5 @@ public class ReviewUpdateDto {
         public UpdateReview(LocalDateTime updateAt) {
             this.updateAt = updateAt;
         }
-    }
+    }*/
 }

@@ -48,7 +48,7 @@ public class ReviewCreateDto {
 
     }
 
-    @Getter
+/*    @Getter
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class CreateReview{
         private Long reviewId;
@@ -58,7 +58,7 @@ public class ReviewCreateDto {
             this.reviewId = reviewId;
             this.createAt = createAt;
         }
-    }
+    }*/
 
 
 

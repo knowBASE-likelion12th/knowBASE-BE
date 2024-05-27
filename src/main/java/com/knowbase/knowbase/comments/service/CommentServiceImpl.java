@@ -67,15 +67,9 @@ public class CommentServiceImpl implements CommentService {
         //댓글 엔티티 저장
         Comment savedComment = commentRepository.save(createComment);
 
-        //응답 dto 생성
-        WriteCommentdto.WriteComment responseDto = new WriteCommentdto.WriteComment(savedComment.getCommentId(),savedComment.getCreateAt());
-
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(
-                        HttpStatus.OK.value(),
-                        responseDto,
-                        "댓글이 작성 되었습니다."));
+                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"댓글이 작성되었습니다"));
 
     }
 
@@ -87,12 +81,11 @@ public class CommentServiceImpl implements CommentService {
         Optional<Comment> findComment = commentRepository.findById(updateCommentDto.getCommentId());
         if(findComment.isEmpty()) {
             return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
+                    .status(HttpStatus.NOT_FOUND)
                     .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.BAD_REQUEST.value(),
-                            "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
+                            HttpStatus.NOT_FOUND.value(),
+                            "수정하려는 댓글이 존재하지 않습니다"));
         }
-
         //댓글의 작성자와 현재 로그인한 사용자가 일치하는지 확인
         Long commentUserId = findComment.get().getUser().getUserId();
         if(commentUserId != updateCommentDto.getUserId()) {
@@ -100,8 +93,9 @@ public class CommentServiceImpl implements CommentService {
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(
                             HttpStatus.FORBIDDEN.value(),
-                            "잘못된 요청입니다."));
+                            "해당 유저는 수정 권한이 없습니다."));
         }
+
 
         //댓글 수정
         //수정할 댓글 가져옴
@@ -111,13 +105,11 @@ public class CommentServiceImpl implements CommentService {
         //변경 사항 db에 반영
         commentRepository.flush();
 
-        //응답 dto 생성
-        UpdateCommentdto.UpdateComment responseDto = new UpdateCommentdto.UpdateComment(comment.getUpdateAt());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(
                         HttpStatus.OK.value(),
-                        responseDto,
+                        null,
                         "댓글이 수정되었습니다."));
     }
 
@@ -129,10 +121,10 @@ public class CommentServiceImpl implements CommentService {
         Optional<Comment> findComment = commentRepository.findById(commentId);
         if(findComment.isEmpty()) {
                 return ResponseEntity
-                        .status(HttpStatus.BAD_REQUEST)
+                        .status(HttpStatus.NOT_FOUND)
                         .body(CustomApiResponse.createFailWithout(
-                                HttpStatus.BAD_REQUEST.value(),
-                                "수정하려는 댓글이 존재하지 않거나, 잘못된 요청입니다."));
+                                HttpStatus.NOT_FOUND.value(),
+                                "삭제하려는 댓글이 존재하지 않습니다."));
         }
         // 댓글의 작성자와 현재 접속한 사용자가 같은지 확인
         if (findComment.get().getUser().getUserId() != commentId ) {
@@ -140,7 +132,7 @@ public class CommentServiceImpl implements CommentService {
                     .status(HttpStatus.FORBIDDEN)
                     .body(CustomApiResponse.createFailWithout(
                             HttpStatus.FORBIDDEN.value(),
-                            "잘못된 요청입니다."));
+                            "해당 유저는 삭제 권한이 없습니다."));
         }
 
         //댓글 삭제 : comment 테이블의 키가 commentlike 테이블에서 참조되고 있기 때문에

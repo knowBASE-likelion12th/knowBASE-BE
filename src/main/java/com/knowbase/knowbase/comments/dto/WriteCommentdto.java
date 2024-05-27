@@ -23,7 +23,7 @@ public class WriteCommentdto {
         private String commentContent;
     }
 
-    @Getter
+/*    @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class WriteComment {
@@ -34,5 +34,5 @@ public class WriteCommentdto {
             this.commentId = commentId;
             this.createAt = createAt;
         }
-    }
+    }*/
 }

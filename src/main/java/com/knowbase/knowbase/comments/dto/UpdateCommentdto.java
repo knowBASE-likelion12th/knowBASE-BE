@@ -22,7 +22,7 @@ public class UpdateCommentdto {
         private String commentContent;
     }
 
-    @Getter
+/*    @Getter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class UpdateComment {
@@ -31,5 +31,5 @@ public class UpdateCommentdto {
         public UpdateComment(LocalDateTime updateAt) {
             this.updateAt = updateAt;
         }
-    }
+    }*/
 }
