@@ -1,4 +1,4 @@
-package com.knowbase.knowbase.util.Controller;
+package com.knowbase.knowbase.util.controller;
 
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import jakarta.servlet.RequestDispatcher;
