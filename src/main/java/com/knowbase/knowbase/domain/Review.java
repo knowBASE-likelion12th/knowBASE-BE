@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Builder
@@ -37,7 +39,7 @@ public class Review extends BaseEntity {
     private String nickname;
 
     @Column(name="date")
-    private String date;
+    private LocalDateTime date;
 
     @Column(name="BEFORE_RE_IMG_PATH")
     private String beforeReImgPath;
@@ -71,9 +73,8 @@ public class Review extends BaseEntity {
         this.menteeId = menteeId;
     }
 
-    public void changeReview(String reviewTitle, String date, String beforeReImgPath, String afterReImgPath, String reviewContent, Long satisfaction, String period, String budget) {
+    public void changeReview(String reviewTitle, String beforeReImgPath, String afterReImgPath, String reviewContent, Long satisfaction, String period, String budget) {
         this.reviewTitle = reviewTitle;
-        this.date = date;
         this.beforeReImgPath = beforeReImgPath;
         this.afterReImgPath = afterReImgPath;
         this.reviewContent = reviewContent;

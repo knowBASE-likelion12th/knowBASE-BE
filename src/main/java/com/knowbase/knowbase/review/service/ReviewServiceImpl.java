@@ -21,6 +21,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -46,12 +48,13 @@ public class ReviewServiceImpl implements ReviewService{
 
         }
 
-        //리뷰 엔티티
+        //후기 엔티티
         Review createReview = Review.builder()
                 .mentorId(findmentor.get())
                 .menteeId(findmentee.get())
                 .reviewTitle(req.getReviewTitle())
                 .nickname(findmentee.get().getNickname())
+                .date(req.getDate())
                 .beforeReImgPath(req.getBeforeReImgPath())
                 .afterReImgPath(req.getAfterReImgPath())
                 .reviewContent(req.getReviewContent())
@@ -121,12 +124,21 @@ public class ReviewServiceImpl implements ReviewService{
 
         List<ReviewListDto.ReviewDto> reviewResponse = new ArrayList<>();
 
+
+
         for(Review review : findReview){
+            //date yyyy.mm.dd 형식으로
+            LocalDateTime date = review.getDate();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            String formattedDate = date.format(formatter);
+
             reviewResponse.add(ReviewListDto.ReviewDto.builder()
+                            .reviewId(review.getReviewId())
                             .mentorId(review.getMentorId().getUserId())
                             .menteeId(review.getMenteeId().getUserId())
                             .reviewTitle(review.getReviewTitle())
-                            .date(review.getDate())
+                            .nickname(review.getNickname())
+                            .date(formattedDate)
                             .beforeReImgPath(review.getBeforeReImgPath())
                             .afterReImgPath(review.getAfterReImgPath())
                             .reviewContent(review.getReviewContent())
@@ -157,11 +169,18 @@ public class ReviewServiceImpl implements ReviewService{
         List<ReviewListDto.ReviewDto> reviewResponse = new ArrayList<>();
 
         for(Review review : findReview){
+            //date yyyy.mm.dd 형식으로
+            LocalDateTime date = review.getDate();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+            String formattedDate = date.format(formatter);
+
             reviewResponse.add(ReviewListDto.ReviewDto.builder()
+                    .reviewId(review.getReviewId())
                     .mentorId(review.getMentorId().getUserId())
                     .menteeId(review.getMenteeId().getUserId())
                     .reviewTitle(review.getReviewTitle())
-                    .date(review.getDate())
+                    .nickname(review.getNickname())
+                    .date(formattedDate)
                     .beforeReImgPath(review.getBeforeReImgPath())
                     .afterReImgPath(review.getAfterReImgPath())
                     .reviewContent(review.getReviewContent())
@@ -220,14 +239,9 @@ public class ReviewServiceImpl implements ReviewService{
                             "해당 유저는 수정 권한이 없습니다."));
         }
 
-
-
-
-
         Review review = findReview.get();
         review.changeReview(
                 reviewUpdateDto.getReviewTitle(),
-                reviewUpdateDto.getDate(),
                 reviewUpdateDto.getBeforeReImgPath(),
                 reviewUpdateDto.getAfterReImgPath(),
                 reviewUpdateDto.getReviewContent(),

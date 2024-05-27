@@ -11,6 +11,7 @@ public class ReviewListDto {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class ReviewDto{
+        private Long reviewId;
         private Long mentorId;
         private Long menteeId;
         private String reviewTitle;

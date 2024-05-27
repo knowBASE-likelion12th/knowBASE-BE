@@ -19,9 +19,6 @@ public class ReviewUpdateDto {
         @NotNull(message = "리뷰 제목을 입력해주세요")
         private String reviewTitle;
 
-        @NotNull(message = "작성 날짜를 입력해주세요")
-        private String date;
-
         @NotNull(message = "멘토링 전 사진의 경로를 넣어주세요")
         private String beforeReImgPath;
 
