@@ -56,10 +56,18 @@ public class PostServiceImpl implements PostService{
         Optional<Post> findPost = postRepository.findById(postId);
         if(findPost.isEmpty()){
             return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(CustomApiResponse.createFailWithout(
+                            HttpStatus.NOT_FOUND.value(),
+                            "존재하지 않는 게시글 입니다."));
+        }
+
+        if(postUpdateDto == null){
+            return ResponseEntity
                     .status(HttpStatus.BAD_REQUEST)
                     .body(CustomApiResponse.createFailWithout(
                             HttpStatus.BAD_REQUEST.value(),
-                            "수정하려는 게시물이 존재하지 않거나, 잘못된 요청입니다."));
+                            "잘못된 요청 입니다."));
         }
         //게시물의 작성자와 수정하려는 유저가 일치하는지 확인
         Long postMemberId = findPost.get().getUserId().getUserId(); //게시물 작성자의 ID
