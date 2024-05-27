@@ -31,14 +31,4 @@ public class RoadmapUpdateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class UpdateRoadmap{
-        private LocalDateTime updateAt;
-
-        public UpdateRoadmap(LocalDateTime updateAt){
-            this.updateAt = updateAt;
-        }
-    }
 }

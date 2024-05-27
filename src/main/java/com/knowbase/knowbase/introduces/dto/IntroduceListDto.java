@@ -14,9 +14,8 @@ public class IntroduceListDto {
         private Long introId;
         private String introContent;
         private String availableTime;
-        private String kakaoId;
         private String strength;
-        private LocalDateTime updatedAt;
+        private String snsId;
     }
 
     //게시물 조회

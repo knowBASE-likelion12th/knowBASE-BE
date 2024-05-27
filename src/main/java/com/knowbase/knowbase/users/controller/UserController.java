@@ -58,7 +58,7 @@ public class UserController {
     }
 
     // 최신순 멘토 조회
-    @GetMapping("/mentors/all/latest")
+    @GetMapping("/mentors/latest")
     private ResponseEntity<CustomApiResponse<?>> getAllMentorsByCreatedAt(){
         return userService.getAllMentorsByCreateAt();
     }
@@ -101,7 +101,7 @@ public class UserController {
     }
 
     //카테고리 별 멘토 조회
-    @GetMapping("/search/category")
+    @GetMapping("/mentors")
     public ResponseEntity<CustomApiResponse<?>> searchMentorsByCategory(
             @RequestParam(required = false) String interest,
             @RequestParam(required = false) String housingType,

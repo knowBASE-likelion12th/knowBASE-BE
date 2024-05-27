@@ -15,7 +15,6 @@ public class HomeStylingListDto {
         private String homestylingTitle;
         private String homestylingImagePath;
         private String homestylingDescription;
-        private LocalDateTime updatedAt;
     }
 
     //홈스타일링 조회

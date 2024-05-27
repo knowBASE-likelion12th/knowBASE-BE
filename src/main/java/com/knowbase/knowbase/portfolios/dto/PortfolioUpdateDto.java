@@ -24,14 +24,4 @@ public class PortfolioUpdateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class UpdatePortfolio{
-        private LocalDateTime updatedAt;
-
-        public UpdatePortfolio(LocalDateTime updatedAt){
-            this.updatedAt = updatedAt;
-        }
-    }
 }

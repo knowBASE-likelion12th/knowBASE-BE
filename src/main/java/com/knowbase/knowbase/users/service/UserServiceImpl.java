@@ -13,6 +13,7 @@ import com.knowbase.knowbase.util.valid.CustomValid;
 import jakarta.servlet.http.HttpSession;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -119,42 +120,68 @@ public class UserServiceImpl implements UserService {
         return ResponseEntity.status(HttpStatus.OK).body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), accountEnter, "로그인에 성공하였습니다."));
     }
 
-    //회원(멘토) 전체 조회
+    // 회원(멘토) 전체 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getAllMentors() {
-        List<User> mentors = userRepository.findByIsMentorTrue();
-        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream().map(user -> MentorListDto.MentorResponse.builder()
-                .userId(user.getUserId())
-                .userName(user.getUserName())
-                .nickName(user.getNickname())
-                .profileImgPath(user.getProfImgPath())
-                .mentorContent(user.getMentorContent())
-                .mentoringPath(user.getMentoringPath())
-                .isMentor(user.getIsMentor())
-                .build()).collect(Collectors.toList());
+        try {
+            List<User> mentors = userRepository.findByIsMentorTrue();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "멘토 전체 조회에 성공하였습니다."));
+            if (mentors.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "등록된 멘토가 없습니다."));
+            }
+
+            List<MentorListDto.MentorResponse> mentorResponses = mentors.stream().map(user -> MentorListDto.MentorResponse.builder()
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .nickName(user.getNickname())
+                    .profileImgPath(user.getProfImgPath())
+                    .mentorContent(user.getMentorContent())
+                    .mentoringPath(user.getMentoringPath())
+                    .isMentor(user.getIsMentor())
+                    .build()).collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "멘토 전체 조회에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "내부 서버 오류가 발생했습니다."));
+        }
     }
 
     //멘토 최신순 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getAllMentorsByCreateAt() {
-        List<User> mentors = userRepository.findByIsMentorTrueOrderByCreateAtDesc();
-        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
-                .map(user -> MentorListDto.MentorResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getUserName())
-                        .nickName(user.getNickname())
-                        .profileImgPath(user.getProfImgPath())
-                        .mentorContent(user.getMentorContent())
-                        .mentoringPath(user.getMentoringPath())
-                        .isMentor(user.getIsMentor())
-                        .build())
-                .collect(Collectors.toList());
+        try {
+            List<User> mentors = userRepository.findByIsMentorTrueOrderByCreateAtDesc();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "최신순 멘토 조회에 성공하였습니다."));
+            if (mentors == null || mentors.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "등록된 멘토가 없습니다."));
+            }
+
+            List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
+                    .map(user -> MentorListDto.MentorResponse.builder()
+                            .userId(user.getUserId())
+                            .userName(user.getUserName())
+                            .nickName(user.getNickname())
+                            .profileImgPath(user.getProfImgPath())
+                            .mentorContent(user.getMentorContent())
+                            .mentoringPath(user.getMentoringPath())
+                            .isMentor(user.getIsMentor())
+                            .build())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "최신순 멘토 조회에 성공하였습니다."));
+
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
+        }
     }
 
     //특정 회원 조회
@@ -219,134 +246,203 @@ public class UserServiceImpl implements UserService {
     //모든 멘티 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getAllMentees() {
-        List<User> mentees = userRepository.findByIsMentorFalse();
-        List<MenteeListDto.MenteeResponse> menteeResponses = mentees.stream().map(user -> MenteeListDto.MenteeResponse.builder()
-                .userId(user.getUserId())
-                .userName(user.getUserName())
-                .nickName(user.getNickname())
-                .profileImgPath(user.getProfImgPath())
-                .isMentor(user.getIsMentor())
-                .build()).collect(Collectors.toList());
+        try {
+            List<User> mentees = userRepository.findByIsMentorFalse();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MenteeListDto.SearchMenteesRes(menteeResponses), "멘티 전체 조회에 성공하였습니다."));
+            if (mentees == null || mentees.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "등록된 멘티가 없습니다."));
+            }
+
+            List<MenteeListDto.MenteeResponse> menteeResponses = mentees.stream().map(user -> MenteeListDto.MenteeResponse.builder()
+                    .userId(user.getUserId())
+                    .userName(user.getUserName())
+                    .nickName(user.getNickname())
+                    .profileImgPath(user.getProfImgPath())
+                    .isMentor(user.getIsMentor())
+                    .build()).collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MenteeListDto.SearchMenteesRes(menteeResponses), "멘티 전체 조회에 성공하였습니다."));
+
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
+        }
     }
 
     // 회원 정보 수정
     @Override
     public ResponseEntity<CustomApiResponse<?>> updateUser(Long userId, UserUpdateDto userUpdateDto) {
-        Optional<User> findUser = userRepository.findById(userId);
+        try {
+            Optional<User> findUser = userRepository.findById(userId);
 
-        if (findUser.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다."));
+            if (findUser.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다."));
+            }
+
+            User user = findUser.get();
+            user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoringPath(), userUpdateDto.getMentorContent());
+            userRepository.save(user);
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "회원 정보가 성공적으로 수정되었습니다."));
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
-
-        User user = findUser.get();
-        user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoring_path(), userUpdateDto.getMentorContent());
-
-        userRepository.save(user);
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "회원 정보가 성공적으로 수정되었습니다."));
     }
 
-    //카테고리별 멘토 조회
+    // 카테고리별 멘토 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> searchMentorsByCategory(String interest, String housingType, String spaceType, String style) {
         List<Category> categories;
 
-        if (interest != null && housingType != null && spaceType != null && style != null) {
-            categories = categoryRepository.findByInterestAndHousingTypeAndSpaceTypeAndStyle(interest, housingType, spaceType, style);
-        } else if (interest != null && housingType != null && spaceType != null) {
-            categories = categoryRepository.findByInterestAndHousingTypeAndSpaceType(interest, housingType, spaceType);
-        } else if (interest != null && housingType != null && style != null) {
-            categories = categoryRepository.findByInterestAndHousingTypeAndStyle(interest, housingType, style);
-        } else if (interest != null && spaceType != null && style != null) {
-            categories = categoryRepository.findByInterestAndSpaceTypeAndStyle(interest, spaceType, style);
-        } else if (housingType != null && spaceType != null && style != null) {
-            categories = categoryRepository.findByHousingTypeAndSpaceTypeAndStyle(housingType, spaceType, style);
-        } else if (interest != null && housingType != null) {
-            categories = categoryRepository.findByInterestAndHousingType(interest, housingType);
-        } else if (interest != null && spaceType != null) {
-            categories = categoryRepository.findByInterestAndSpaceType(interest, spaceType);
-        } else if (interest != null && style != null) {
-            categories = categoryRepository.findByInterestAndStyle(interest, style);
-        } else if (housingType != null && spaceType != null) {
-            categories = categoryRepository.findByHousingTypeAndSpaceType(housingType, spaceType);
-        } else if (housingType != null && style != null) {
-            categories = categoryRepository.findByHousingTypeAndStyle(housingType, style);
-        } else if (spaceType != null && style != null) {
-            categories = categoryRepository.findBySpaceTypeAndStyle(spaceType, style);
-        } else if (interest != null) {
-            categories = categoryRepository.findByInterest(interest);
-        } else if (housingType != null) {
-            categories = categoryRepository.findByHousingType(housingType);
-        } else if (spaceType != null) {
-            categories = categoryRepository.findBySpaceType(spaceType);
-        } else if (style != null) {
-            categories = categoryRepository.findByStyle(style);
-        } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "검색 조건을 하나 이상 입력하세요."));
+        try {
+            if (interest != null && housingType != null && spaceType != null && style != null) {
+                categories = categoryRepository.findByInterestAndHousingTypeAndSpaceTypeAndStyle(interest, housingType, spaceType, style);
+            } else if (interest != null && housingType != null && spaceType != null) {
+                categories = categoryRepository.findByInterestAndHousingTypeAndSpaceType(interest, housingType, spaceType);
+            } else if (interest != null && housingType != null && style != null) {
+                categories = categoryRepository.findByInterestAndHousingTypeAndStyle(interest, housingType, style);
+            } else if (interest != null && spaceType != null && style != null) {
+                categories = categoryRepository.findByInterestAndSpaceTypeAndStyle(interest, spaceType, style);
+            } else if (housingType != null && spaceType != null && style != null) {
+                categories = categoryRepository.findByHousingTypeAndSpaceTypeAndStyle(housingType, spaceType, style);
+            } else if (interest != null && housingType != null) {
+                categories = categoryRepository.findByInterestAndHousingType(interest, housingType);
+            } else if (interest != null && spaceType != null) {
+                categories = categoryRepository.findByInterestAndSpaceType(interest, spaceType);
+            } else if (interest != null && style != null) {
+                categories = categoryRepository.findByInterestAndStyle(interest, style);
+            } else if (housingType != null && spaceType != null) {
+                categories = categoryRepository.findByHousingTypeAndSpaceType(housingType, spaceType);
+            } else if (housingType != null && style != null) {
+                categories = categoryRepository.findByHousingTypeAndStyle(housingType, style);
+            } else if (spaceType != null && style != null) {
+                categories = categoryRepository.findBySpaceTypeAndStyle(spaceType, style);
+            } else if (interest != null) {
+                categories = categoryRepository.findByInterest(interest);
+            } else if (housingType != null) {
+                categories = categoryRepository.findByHousingType(housingType);
+            } else if (spaceType != null) {
+                categories = categoryRepository.findBySpaceType(spaceType);
+            } else if (style != null) {
+                categories = categoryRepository.findByStyle(style);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "검색 조건을 하나 이상 입력하세요."));
+            }
+
+            if (categories.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "해당 조건에 맞는 멘토가 없습니다."));
+            }
+
+            List<MentorListDto.MentorResponse> mentorResponses = categories.stream()
+                    .map(Category::getUser)
+                    .filter(User::getIsMentor)  // 멘토만 필터링
+                    .map(user -> MentorListDto.MentorResponse.builder()
+                            .userId(user.getUserId())
+                            .userName(user.getUserName())
+                            .nickName(user.getNickname())
+                            .profileImgPath(user.getProfImgPath())
+                            .mentorContent(user.getMentorContent())
+                            .mentoringPath(user.getMentoringPath())
+                            .isMentor(user.getIsMentor())
+                            .build())
+                    .collect(Collectors.toList());
+
+            if (mentorResponses.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "해당 조건에 맞는 멘토가 없습니다."));
+            }
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "멘토 검색에 성공하였습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "내부 서버 오류가 발생했습니다."));
         }
-
-        List<MentorListDto.MentorResponse> mentorResponses = categories.stream()
-                .map(Category::getUser)
-                .filter(User::getIsMentor)  // 멘토만 필터링
-                .map(user -> MentorListDto.MentorResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getUserName())
-                        .nickName(user.getNickname())
-                        .profileImgPath(user.getProfImgPath())
-                        .mentorContent(user.getMentorContent())
-                        .mentoringPath(user.getMentoringPath())
-                        .isMentor(user.getIsMentor())
-                        .build())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "멘토 검색에 성공하였습니다."));
     }
+
 
     //만족도 높은 순 멘토 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionDesc() {
-        List<User> mentors = userRepository.findMentorsBySatisfactionDesc();
-        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
-                .map(user -> MentorListDto.MentorResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getUserName())
-                        .nickName(user.getNickname())
-                        .profileImgPath(user.getProfImgPath())
-                        .mentorContent(user.getMentorContent())
-                        .mentoringPath(user.getMentoringPath())
-                        .isMentor(user.getIsMentor())
-                        .build())
-                .collect(Collectors.toList());
+        try {
+            List<User> mentors = userRepository.findMentorsBySatisfactionDesc();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 높은 순 멘토 조회에 성공하였습니다."));
+            if (mentors == null || mentors.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "등록된 멘토가 없습니다."));
+            }
+
+            List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
+                    .map(user -> MentorListDto.MentorResponse.builder()
+                            .userId(user.getUserId())
+                            .userName(user.getUserName())
+                            .nickName(user.getNickname())
+                            .profileImgPath(user.getProfImgPath())
+                            .mentorContent(user.getMentorContent())
+                            .mentoringPath(user.getMentoringPath())
+                            .isMentor(user.getIsMentor())
+                            .build())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 높은 순 멘토 조회에 성공하였습니다."));
+
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
+        }
     }
+
 
     //만족도 낮은 순 멘토 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc() {
-        List<User> mentors = userRepository.findMentorsBySatisfactionAsc();
-        List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
-                .map(user -> MentorListDto.MentorResponse.builder()
-                        .userId(user.getUserId())
-                        .userName(user.getUserName())
-                        .nickName(user.getNickname())
-                        .profileImgPath(user.getProfImgPath())
-                        .mentorContent(user.getMentorContent())
-                        .mentoringPath(user.getMentoringPath())
-                        .isMentor(user.getIsMentor())
-                        .build())
-                .collect(Collectors.toList());
+        try {
+            List<User> mentors = userRepository.findMentorsBySatisfactionAsc();
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 낮은 순 멘토 조회에 성공하였습니다."));
+            if (mentors == null || mentors.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "등록된 멘토가 없습니다."));
+            }
+
+            List<MentorListDto.MentorResponse> mentorResponses = mentors.stream()
+                    .map(user -> MentorListDto.MentorResponse.builder()
+                            .userId(user.getUserId())
+                            .userName(user.getUserName())
+                            .nickName(user.getNickname())
+                            .profileImgPath(user.getProfImgPath())
+                            .mentorContent(user.getMentorContent())
+                            .mentoringPath(user.getMentoringPath())
+                            .isMentor(user.getIsMentor())
+                            .build())
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), new MentorListDto.SearchMentorsRes(mentorResponses), "만족도 낮은 순 멘토 조회에 성공하였습니다."));
+
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
+        }
     }
 
     //아이디 중복확인

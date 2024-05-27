@@ -25,16 +25,16 @@ public class PortfolioController {
     }
 
     //포트폴리오 수정
-    @PutMapping
+    @PatchMapping("/{portfolioId}")
     public ResponseEntity<CustomApiResponse<?>> updatePortfolio(
-            @RequestParam("portfolioId") Long portfolioId,
+            @PathVariable("portfolioId") Long portfolioId,
             @Valid @RequestBody PortfolioUpdateDto.Req portfolioUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> portfolio = portfolioService.updatePortfolio(portfolioId, portfolioUpdateDto);
         return portfolio;
     }
 
     //특정 유저의 포트폴리오 조회(모든 유저가 조회 가능)
-    @GetMapping("/mentor")
+    @GetMapping
     public ResponseEntity<CustomApiResponse<?>> getPortfolio(
             @RequestParam("userId") Long userId) {
         ResponseEntity<CustomApiResponse<?>> portfolio = portfolioService.getPortfolio(userId);

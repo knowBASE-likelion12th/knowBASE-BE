@@ -15,7 +15,6 @@ public class HomestylingCreateDto {
         @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
         private Long userId;
 
-
         @NotNull(message="홈스타일링 제목은 비어있을 수 없습니다.")
         private String homestylingTitle;
 
@@ -31,18 +30,6 @@ public class HomestylingCreateDto {
                     .homeStylingImagePath(homestylingImagePath)
                     .homeStylingDescription(homestylingDescription)
                     .build();
-        }
-    }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class CreateHomestyling{
-        private Long homestylingId;
-        private LocalDateTime createdAt;
-
-        public CreateHomestyling(Long homestylingId, LocalDateTime createdAt){
-            this.homestylingId = homestylingId;
-            this.createdAt = createdAt;
         }
     }
 }

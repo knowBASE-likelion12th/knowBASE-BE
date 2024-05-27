@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/homestyling")
+@RequestMapping("/api/homeStyle")
 public class HomestylingController {
     private final HomestylingService homestylingService;
 
@@ -25,16 +25,16 @@ public class HomestylingController {
     }
 
     //홈스타일링 수정
-    @PutMapping
+    @PatchMapping("/{homestylingId}")
     public ResponseEntity<CustomApiResponse<?>> updateHomestyling(
-            @RequestParam("homestylingId") Long homestylingId,
+            @PathVariable("homestylingId") Long homestylingId,
             @Valid @RequestBody HomestylingUpdateDto.Req homestylingUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.updateHomestyling(homestylingId, homestylingUpdateDto);
         return homestyling;
     }
 
     //특정 유저의 홈스타일링 조회(모든 유저가 조회 가능)
-    @GetMapping("/mentor")
+    @GetMapping
     public ResponseEntity<CustomApiResponse<?>> getHomestyling(
             @RequestParam("userId") Long userId) {
         ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.getHomestyling(userId);

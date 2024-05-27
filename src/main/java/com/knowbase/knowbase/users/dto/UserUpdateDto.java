@@ -9,15 +9,15 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 public class UserUpdateDto {
-    @NotBlank(message = "User name is required")
-    private String userName;
-
-    @NotBlank(message = "Nick name is required")
+    @NotBlank(message = "유저 닉네임은 필수입니다")
     private String nickName;
+
+    @NotBlank(message = "유저 아이디는 필수입니다.")
+    private String userName;
 
     private String profileImgPath;
 
-    private String mentoring_path;
+    private String mentoringPath;
 
     private String mentorContent;
 }

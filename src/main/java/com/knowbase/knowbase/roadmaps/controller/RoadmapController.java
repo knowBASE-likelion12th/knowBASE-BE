@@ -24,16 +24,16 @@ public class RoadmapController {
     }
 
     // 로드맵 수정
-    @PutMapping
+    @PatchMapping("/{roadmapId}")
     public ResponseEntity<CustomApiResponse<?>> updateRoadmap(
-            @RequestParam("roadmapId") Long roadmapId,
+            @PathVariable("roadmapId") Long roadmapId,
             @RequestBody RoadmapUpdateDto.Req roadmapUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> roadmap = roadmapService.updateRoadmap(roadmapId, roadmapUpdateDto);
         return roadmap;
     }
 
     // 로드맵 조회
-    @GetMapping("/mentor")
+    @GetMapping
     public ResponseEntity<CustomApiResponse<?>> getRoadmapDetail(
             @RequestParam("userId") Long userId) {
         ResponseEntity<CustomApiResponse<?>> roadmap = roadmapService.getRoadmap(userId);

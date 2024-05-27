@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.introduces.service;
 
+import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.introduces.dto.IntroduceCreateDto;
 import com.knowbase.knowbase.introduces.dto.IntroduceUpdateDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;

@@ -20,7 +20,6 @@ public class QuestionListDto {
         private String answerContent3;
         private String questionContent4;
         private String answerContent4;
-        private LocalDateTime updatedAt;
     }
 
     //게시물 조회

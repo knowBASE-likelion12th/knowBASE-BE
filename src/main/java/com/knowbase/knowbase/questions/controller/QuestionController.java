@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/questions")
+@RequestMapping("/api/question")
 public class QuestionController {
     private final QuestionService questionService;
 
@@ -24,16 +24,16 @@ public class QuestionController {
     }
 
     //질문 답변 수정
-    @PutMapping
+    @PatchMapping("/{questionId}")
     public ResponseEntity<CustomApiResponse<?>> updateQuestion(
-            @RequestParam("questionId") Long questionId,
+            @PathVariable("questionId") Long questionId,
             @Valid @RequestBody QuestionUpdateDto.Req questionUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> question = questionService.updateQuestion(questionId, questionUpdateDto);
         return question;
     }
 
     //특정 유저의 질문 답변 조회(모든 유저가 조회 가능)
-    @GetMapping("/mentor")
+    @GetMapping
     public ResponseEntity<CustomApiResponse<?>> getQuestion(
             @RequestParam("userId") Long userId) {
         ResponseEntity<CustomApiResponse<?>> question = questionService.getQuestion(userId);
