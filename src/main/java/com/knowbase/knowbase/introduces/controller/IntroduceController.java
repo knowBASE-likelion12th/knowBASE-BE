@@ -24,13 +24,14 @@ public class IntroduceController {
     }
 
     // 소개 글 수정 (인증된 사용자만 가능)
-    @PutMapping
+    @PatchMapping("/{introId}")
     public ResponseEntity<CustomApiResponse<?>> updateIntroduce(
-            @RequestParam("introId") Long introId,
+            @PathVariable Long introId,
             @Valid @RequestBody IntroduceUpdateDto.Req introduceUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> introduce = introduceService.updateIntroduce(introId, introduceUpdateDto);
         return introduce;
     }
+
 
     // 특정 유저의 소개 글 조회(모든 유저가 조회 가능)
     @GetMapping("/mentor")

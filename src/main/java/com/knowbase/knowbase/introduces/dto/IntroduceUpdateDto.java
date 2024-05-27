@@ -31,13 +31,4 @@ public class IntroduceUpdateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class UpdateIntroduce{
-        private LocalDateTime updateAt;
-        public UpdateIntroduce(LocalDateTime updateAt) {
-            this.updateAt = updateAt;
-        }
-    }
 }

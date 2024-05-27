@@ -1,10 +1,9 @@
 package com.knowbase.knowbase.introduces.dto;
 
 import com.knowbase.knowbase.domain.Introduce;
+import com.knowbase.knowbase.domain.User;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.time.LocalDateTime;
 
 public class IntroduceCreateDto {
     @Getter @Setter
@@ -34,19 +33,6 @@ public class IntroduceCreateDto {
                     .kakaoId(kakaoId)
                     .strength(strength)
                     .build();
-        }
-    }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class CreateIntroduce {
-        private Long introId;
-        private LocalDateTime createdAt;
-
-        public CreateIntroduce(Long introId, LocalDateTime createdAt) {
-            this.introId = introId;
-            this.createdAt = createdAt;
         }
     }
 }
