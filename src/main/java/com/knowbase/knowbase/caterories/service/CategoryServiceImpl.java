@@ -37,11 +37,8 @@ public class CategoryServiceImpl implements CategoryService{
         newCategory.createCategory(findUser.get()); //연관관계 설정
         Category savedCategory = categoryRepository.save(newCategory);
 
-        //응답 dto
-        CreateCategoryDto.CreateCategory createdCategoryResponse = new CreateCategoryDto.CreateCategory(savedCategory.getCategoryId(),savedCategory.getCreateAt());
-
         //응답
-        CustomApiResponse<CreateCategoryDto.CreateCategory> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), createdCategoryResponse,"카테고리가 작성되었습니다.");
+        CustomApiResponse<CreateCategoryDto.CreateCategory> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null,"카테고리가 작성되었습니다.");
         return ResponseEntity.ok(res);
     }
 }
