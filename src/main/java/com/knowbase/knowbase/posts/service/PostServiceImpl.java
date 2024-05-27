@@ -72,10 +72,16 @@ public class PostServiceImpl implements PostService{
         }
 
         //게시물 수정
+        //수정할 게시물 가져옴
         Post post = findPost.get();
+        //제목 변경
         post.changePostTitle(postUpdateDto.getPostTitle());
+        //내용 변경
         post.changePostContent(postUpdateDto.getPostContent());
+        //이미지 변경
         post.changePostImgPath(postUpdateDto.getPostImgPath());
+
+        postRepository.flush(); //변경 항 db에 즉시 적용
 
         //응답 dto 생성
         PostUpdateDto.UpdatePost updatePostResponse = PostUpdateDto.UpdatePost.builder()

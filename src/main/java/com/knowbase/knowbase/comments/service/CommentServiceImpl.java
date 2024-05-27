@@ -225,7 +225,7 @@ public class CommentServiceImpl implements CommentService {
             Optional<Adoption> findAdoption = adoptionRepository.findByUserAndComment(findUser.get(), comment);
             Optional<CommentLike> findCommentLike = commentLikeRepository.findByUserAndComment(findUser.get(), comment);
             boolean isAdopt = findAdoption.isPresent(); //채택 존재 여부
-            boolean isLiked = findCommentLike.isPresent();
+            boolean isLiked = findCommentLike.isPresent(); //좋아요 존재 여부
             Long likeCount = commentLikeRepository.countByComment(comment); //좋아요 갯수 가져오기
 
             commentResponse.add(CommentListDto.CommentDto.builder()
