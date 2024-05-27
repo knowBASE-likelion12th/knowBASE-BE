@@ -37,9 +37,10 @@ public class UserServiceImpl implements UserService {
 
         //1. 이미 존재하는 아이디인지 검사 -> 회원가입 x
         if (findUser.isPresent()) {
-            CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "이미 사용중인 아이디입니다.");
+            CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 회원입니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failResponse);
         }
+
 
         // 2. 존재하지 않는 아이디 -> 회원가입 O
         User newUser = User.builder()
@@ -67,7 +68,7 @@ public class UserServiceImpl implements UserService {
 
         //1. 이미 존재하는 아이디인지 검사 -> 회원가입 x
         if (findUser.isPresent()) {
-            CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "이미 사용중인 아이디입니다.");
+            CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 회원입니다.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failResponse);
         }
 
@@ -195,8 +196,8 @@ public class UserServiceImpl implements UserService {
         //DB에 존재하는 회원인지 확인
         Optional<User> findUser = userRepository.findById(userId);
         if (findUser.isEmpty()) {
-            CustomApiResponse<Void> failResponse = CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다.");
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(failResponse);
+            CustomApiResponse<Void> failResponse = CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "존재하지 않는 회원입니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failResponse);
         }
         //탈퇴
         userRepository.delete(findUser.get());
@@ -351,15 +352,12 @@ public class UserServiceImpl implements UserService {
     //아이디 중복확인
     @Override
     public ResponseEntity<CustomApiResponse<?>> checkUserIdExists(String userName) {
-        // 사용자 아이디 형식 검증
-        if (!CustomValid.isUserIdValid(userName)) {
-            throw new CustomValidationException("아이디는 영문자와 숫자만 포함할 수 있습니다.");
-        }
 
         // 사용자 아이디 중복 검증
         boolean userIdExists = userRepository.findByUserName(userName).isPresent();
         if (userIdExists) {
-            throw new EntityDuplicatedException("이미 사용중인 아이디입니다.");
+            CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "이미 사용중인 아이디입니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failResponse);
         }
 
         // 응답
