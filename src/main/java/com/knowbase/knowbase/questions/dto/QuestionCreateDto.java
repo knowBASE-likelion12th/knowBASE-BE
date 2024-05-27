@@ -52,17 +52,4 @@ public class QuestionCreateDto {
                     .build();
         }
     }
-
-    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class CreateQuestion{
-        private Long questionId;
-        private LocalDateTime createdAt;
-
-        public CreateQuestion(Long questionId, LocalDateTime createdAt){
-            this.questionId = questionId;
-            this.createdAt = createdAt;
-        }
-    }
 }

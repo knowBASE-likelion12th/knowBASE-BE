@@ -52,13 +52,4 @@ public class QuestionUpdateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class UpdateQuestion{
-        private LocalDateTime updateAt;
-        public UpdateQuestion(LocalDateTime updateAt){
-            this.updateAt = updateAt;
-        }
-    }
 }
