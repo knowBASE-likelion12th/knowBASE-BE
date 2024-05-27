@@ -31,16 +31,4 @@ public class RoadmapCreateDto {
                     .build();
         }
     }
-
-    @Getter @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class CreateRoadmap {
-        private Long roadmapId;
-        private LocalDateTime createdAt;
-
-        public CreateRoadmap(Long roadmapId, LocalDateTime createdAt){
-            this.roadmapId = roadmapId;
-            this.createdAt = createdAt;
-        }
-    }
 }

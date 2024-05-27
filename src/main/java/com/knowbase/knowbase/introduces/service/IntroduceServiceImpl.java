@@ -39,7 +39,7 @@ public class IntroduceServiceImpl implements IntroduceService {
 
             Introduce newIntroduce = introduceCreateDto.toEntity();
             newIntroduce.createIntroduce(findUser.get()); // 연관관계 설정
-            Introduce savedIntroduce = introduceRepository.save(newIntroduce);
+            introduceRepository.save(newIntroduce);
 
             // 응답
             CustomApiResponse<IntroduceCreateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "소개글이 작성되었습니다.");
@@ -77,7 +77,7 @@ public class IntroduceServiceImpl implements IntroduceService {
             introduce.changeIntroContent(introduceUpdateDto.getIntroContent());
             introduce.changeAvailableTime(introduceUpdateDto.getAvailableTime());
             introduce.changeStrength(introduceUpdateDto.getStrength());
-            Introduce savedIntroduce = introduceRepository.save(introduce);
+            introduceRepository.save(introduce);
 
             // 4. 응답
             CustomApiResponse<IntroduceUpdateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "소개글이 수정되었습니다.");

@@ -15,7 +15,6 @@ public class RoadmapListDto {
         private String roadmapBefore;
         private String roadmapStart;
         private String roadmapAfter;
-        private LocalDateTime updatedAt;
     }
 
     //로드맵 조회

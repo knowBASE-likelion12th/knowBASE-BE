@@ -41,7 +41,7 @@ public class PortfolioServiceImpl implements PortfolioService{
 
             Portfolio newPortfolio = portfolioCreateDto.toEntity();
             newPortfolio.createPortfolio(findUser.get()); // 연관관계 설정
-            Portfolio savedPortfolio = portfolioRepository.save(newPortfolio);
+            portfolioRepository.save(newPortfolio);
 
             // 응답
             CustomApiResponse<PortfolioCreateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "포트폴리오가 작성되었습니다.");
@@ -81,7 +81,7 @@ public class PortfolioServiceImpl implements PortfolioService{
         //3.수정
         Portfolio portfolio = findPortfolio.get();
         portfolio.changeImagePath(portfolioUpdateDto.getPortfolioImagePath());
-        Portfolio savePortfolio = portfolioRepository.save(portfolio);
+        portfolioRepository.save(portfolio);
 
         //응답
         CustomApiResponse<PortfolioUpdateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "포트폴리오가 수정되었습니다.");
