@@ -104,12 +104,15 @@ public class CommentServiceImpl implements CommentService {
         }
 
         //댓글 수정
+        //수정할 댓글 가져옴
         Comment comment = findComment.get();
-        Comment savedComment = commentRepository.save(comment);
-        //comment.changeContent(comment.getCommentContent());
+        //댓글 내용 변경
+        comment.changeContent(updateCommentDto.getCommentContent());
+        //변경 사항 db에 반영
+        commentRepository.flush();
 
         //응답 dto 생성
-        UpdateCommentdto.UpdateComment responseDto = new UpdateCommentdto.UpdateComment(savedComment.getUpdateAt());
+        UpdateCommentdto.UpdateComment responseDto = new UpdateCommentdto.UpdateComment(comment.getUpdateAt());
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(CustomApiResponse.createSuccess(

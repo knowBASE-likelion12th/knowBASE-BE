@@ -81,7 +81,7 @@ public class PostServiceImpl implements PostService{
         //이미지 변경
         post.changePostImgPath(postUpdateDto.getPostImgPath());
 
-        postRepository.flush(); //변경 항 db에 즉시 적용
+        postRepository.flush(); //변경 사항 db에 즉시 적용
 
         //응답 dto 생성
         PostUpdateDto.UpdatePost updatePostResponse = PostUpdateDto.UpdatePost.builder()
