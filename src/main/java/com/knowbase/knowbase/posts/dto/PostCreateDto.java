@@ -5,6 +5,7 @@ import com.knowbase.knowbase.domain.User;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -25,9 +26,9 @@ public class PostCreateDto
         @NotNull(message = "게시물의 내용을 입력해주세요.")
         private String postContent;
 
-        private String postImgPath ;
+        private MultipartFile postImgPath ;
 
-        public Post toEntity(){
+        public Post toEntity(String postImgPath) {
             return Post.builder()
                     .postTitle(postTitle)
                     .postContent(postContent)

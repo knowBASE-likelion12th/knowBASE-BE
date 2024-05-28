@@ -20,7 +20,7 @@ public class PostController {
      private final PostService postService;
 
      //게시물 작성
-     @PostMapping
+     @PostMapping(consumes ={"multipart/form-data"} )
     public ResponseEntity<CustomApiResponse<?>> createPost(
             @Valid @RequestBody PostCreateDto.Req postCreateDto){
          ResponseEntity<CustomApiResponse<?>> post = postService.createPost(postCreateDto);
