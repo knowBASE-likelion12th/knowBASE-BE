@@ -17,18 +17,18 @@ public class HomestylingController {
     private final HomestylingService homestylingService;
 
     //홈스타일링 작성
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> createHomestyling(
-            @Valid @RequestBody HomestylingCreateDto.Req homestylingCreateDto) {
+            @Valid @ModelAttribute HomestylingCreateDto homestylingCreateDto) {
         ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.createHomestyling(homestylingCreateDto);
         return homestyling;
     }
 
     //홈스타일링 수정
-    @PatchMapping("/{homestylingId}")
+    @PatchMapping(value= "/{homestylingId}", consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> updateHomestyling(
             @PathVariable("homestylingId") Long homestylingId,
-            @Valid @RequestBody HomestylingUpdateDto.Req homestylingUpdateDto) {
+            @Valid @ModelAttribute HomestylingUpdateDto homestylingUpdateDto) {
         ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.updateHomestyling(homestylingId, homestylingUpdateDto);
         return homestyling;
     }

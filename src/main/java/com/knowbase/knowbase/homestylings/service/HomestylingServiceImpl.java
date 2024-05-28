@@ -9,6 +9,7 @@ import com.knowbase.knowbase.homestylings.dto.HomestylingUpdateDto;
 import com.knowbase.knowbase.homestylings.repository.HomestylingRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
+import com.knowbase.knowbase.util.service.S3UploadService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -26,10 +27,11 @@ import java.util.Optional;
 public class HomestylingServiceImpl implements HomestylingService {
     private final HomestylingRepository homestylingRepository;
     private final UserRepository userRepository;
+    private final S3UploadService s3UploadService;
 
     //홈스타일링 작성
     @Override
-    public ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto.Req homestylingCreateDto) {
+    public ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto homestylingCreateDto) {
         try {
             // 게시글 작성자가 DB에 존재하는지 확인
             Optional<User> findUser = userRepository.findById(homestylingCreateDto.getUserId());
@@ -39,9 +41,13 @@ public class HomestylingServiceImpl implements HomestylingService {
                         .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
                                 "해당 유저는 존재하지 않습니다."));
             }
-            HomeStyling newHomestyling = homestylingCreateDto.toEntity();
+
+            //S3에 파일 업로드
+            String homestylingImagePath = s3UploadService.saveFile(homestylingCreateDto.getHomestylingImg());
+
+            HomeStyling newHomestyling = homestylingCreateDto.toEntity(homestylingImagePath);
             newHomestyling.createHomeStyling(findUser.get()); // 연관관계 설정
-            HomeStyling savedHomestyling = homestylingRepository.save(newHomestyling);
+            homestylingRepository.save(newHomestyling);
 
             // 응답
             CustomApiResponse<HomestylingCreateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "홈스타일링이 작성되었습니다.");
@@ -58,7 +64,7 @@ public class HomestylingServiceImpl implements HomestylingService {
 
     //홈스타일링 수정
     @Override
-    public ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto.Req homestylingUpdateDto) {
+    public ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto) {
         try {
             // 1. 수정하려는 홈스타일링이 DB에 존재하는지 확인
             Optional<HomeStyling> findHomestyling = homestylingRepository.findById(homestylingId);
@@ -71,7 +77,8 @@ public class HomestylingServiceImpl implements HomestylingService {
             }
 
             // 2. 수정하려는 홈스타일링이 로그인한 유저의 것인지 확인
-            if (!findHomestyling.get().getUserId().getUserId().equals(homestylingUpdateDto.getUserId())) {
+            HomeStyling homestyling = findHomestyling.get();
+            if (!homestyling.getUserId().getUserId().equals(homestylingUpdateDto.getUserId())) {
                 return ResponseEntity
                         .status(HttpStatus.FORBIDDEN)
                         .body(CustomApiResponse.createFailWithout(
@@ -79,12 +86,16 @@ public class HomestylingServiceImpl implements HomestylingService {
                                 "해당 홈스타일링은 수정할 수 없습니다."));
             }
 
-            // 3. 홈스타일링 수정
-            HomeStyling homestyling = findHomestyling.get();
-            homestyling.changeTitle(homestylingUpdateDto.getHomestylingTitle());
-            homestyling.changeDescription(homestylingUpdateDto.getHomestylingDescription());
-            homestyling.changeImagePath(homestylingUpdateDto.getHomestylingImagePath());
-            HomeStyling updatedHomestyling = homestylingRepository.save(homestyling);
+            // 3. 기존 이미지 삭제
+            String originalFilename = findHomestyling.get().getHomeStylingImagePath();
+            s3UploadService.deleteImage(originalFilename);
+
+            //4. 새 이미지 업로드
+            String newImagePath = s3UploadService.saveFile(homestylingUpdateDto.getHomestylingImg());
+            homestyling.changeImagePath(newImagePath);
+
+            //5.저장
+            homestylingRepository.save(homestyling);
 
             // 응답
             CustomApiResponse<HomestylingUpdateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "홈스타일링이 수정되었습니다.");
@@ -196,7 +207,11 @@ public class HomestylingServiceImpl implements HomestylingService {
                                 "해당 홈스타일링은 삭제할 수 없습니다."));
             }
 
-            // 3. 홈스타일링 삭제
+            //3.기존 이미지 삭제
+            String originalFilename = findHomestyling.get().getHomeStylingImagePath();
+            s3UploadService.deleteImage(originalFilename);
+
+            // 4. 홈스타일링 삭제
             homestylingRepository.delete(findHomestyling.get());
 
             // 4. 응답
