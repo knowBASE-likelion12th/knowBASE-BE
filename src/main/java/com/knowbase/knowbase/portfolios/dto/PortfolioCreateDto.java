@@ -1,28 +1,24 @@
 package com.knowbase.knowbase.portfolios.dto;
 
 import com.knowbase.knowbase.domain.Portfolio;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.time.LocalDateTime;
-
+@Getter
+@Setter
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class PortfolioCreateDto {
-    @Getter @Setter
-    @AllArgsConstructor(access = AccessLevel.PROTECTED)
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class Req{
+    @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
+    private Long userId;
 
-        @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
-        private Long userId;
+    @NotNull(message = "포트폴리오 사진은 비어있을 수 없습니다.")
+    private MultipartFile portfolioImg;
 
-        @NotEmpty(message = "포트폴리오 사진 경로는 비어있을 수 없습니다.")
-        private String portfolioImagePath;
-
-        public Portfolio toEntity(){
-            return Portfolio.builder()
-                    .portfolioImagePath(portfolioImagePath)
-                    .build();
-        }
+    public Portfolio toEntity(String portfolioImagePath) {
+        return Portfolio.builder()
+                .portfolioImagePath(portfolioImagePath)
+                .build();
     }
 }

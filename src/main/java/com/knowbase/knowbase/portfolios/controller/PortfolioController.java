@@ -17,20 +17,18 @@ public class PortfolioController {
     private final PortfolioService portfolioService;
 
     //포트폴리오 작성
-    @PostMapping
+    @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> createPortfolio(
-            @Valid @RequestBody PortfolioCreateDto.Req portfolioCreateDto) {
-        ResponseEntity<CustomApiResponse<?>> portfolio = portfolioService.createPortfolio(portfolioCreateDto);
-        return portfolio;
+            @Valid @ModelAttribute PortfolioCreateDto portfolioCreateDto) {
+        return portfolioService.createPortfolio(portfolioCreateDto);
     }
 
-    //포트폴리오 수정
-    @PatchMapping("/{portfolioId}")
+    // 포트폴리오 수정
+    @PatchMapping(value = "/{portfolioId}", consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> updatePortfolio(
             @PathVariable("portfolioId") Long portfolioId,
-            @Valid @RequestBody PortfolioUpdateDto.Req portfolioUpdateDto) {
-        ResponseEntity<CustomApiResponse<?>> portfolio = portfolioService.updatePortfolio(portfolioId, portfolioUpdateDto);
-        return portfolio;
+            @Valid @ModelAttribute PortfolioUpdateDto portfolioUpdateDto) {
+        return portfolioService.updatePortfolio(portfolioId, portfolioUpdateDto);
     }
 
     //특정 유저의 포트폴리오 조회(모든 유저가 조회 가능)

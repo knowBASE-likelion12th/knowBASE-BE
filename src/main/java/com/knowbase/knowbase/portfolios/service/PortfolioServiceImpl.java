@@ -9,6 +9,7 @@ import com.knowbase.knowbase.portfolios.dto.PortfolioUpdateDto;
 import com.knowbase.knowbase.portfolios.repository.PortfolioRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
+import com.knowbase.knowbase.util.service.S3UploadService;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
@@ -26,10 +27,11 @@ import java.util.Optional;
 public class PortfolioServiceImpl implements PortfolioService{
     private final PortfolioRepository portfolioRepository;
     private final UserRepository userRepository;
+    private final S3UploadService s3UploadService;
 
     //포트폴리오 작성
     @Override
-    public ResponseEntity<CustomApiResponse<?>> createPortfolio(PortfolioCreateDto.Req portfolioCreateDto) {
+    public ResponseEntity<CustomApiResponse<?>> createPortfolio(PortfolioCreateDto portfolioCreateDto) {
         try {
             // 게시글 작성자가 DB에 존재하는지 확인
             Optional<User> findUser = userRepository.findById(portfolioCreateDto.getUserId());
@@ -39,7 +41,10 @@ public class PortfolioServiceImpl implements PortfolioService{
                         .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 유저입니다."));
             }
 
-            Portfolio newPortfolio = portfolioCreateDto.toEntity();
+            // S3에 파일 업로드
+            String portfolioImagePath = s3UploadService.saveFile(portfolioCreateDto.getPortfolioImg());
+
+            Portfolio newPortfolio = portfolioCreateDto.toEntity(portfolioImagePath);
             newPortfolio.createPortfolio(findUser.get()); // 연관관계 설정
             portfolioRepository.save(newPortfolio);
 
@@ -58,34 +63,49 @@ public class PortfolioServiceImpl implements PortfolioService{
 
     //포트폴리오 수정
     @Override
-    public ResponseEntity<CustomApiResponse<?>> updatePortfolio(Long portfolioId, PortfolioUpdateDto.Req portfolioUpdateDto) {
-        //1.수정하려는 포트폴리오가 DB에 존재하는지 확인
-        Optional<Portfolio> findPortfolio = portfolioRepository.findById(portfolioId);
-        if (findPortfolio.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.BAD_REQUEST.value(),
-                            "해당 포트폴리오는 존재하지 않습니다."));
+    public ResponseEntity<CustomApiResponse<?>> updatePortfolio(Long portfolioId, PortfolioUpdateDto portfolioUpdateDto) {
+        try {
+            // 1. 수정하려는 포트폴리오가 DB에 존재하는지 확인
+            Optional<Portfolio> findPortfolio = portfolioRepository.findById(portfolioId);
+            if (findPortfolio.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.BAD_REQUEST)
+                        .body(CustomApiResponse.createFailWithout(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "해당 포트폴리오는 존재하지 않습니다."));
+            }
+
+            // 2. 수정하려는 포트폴리오의 작성자와 수정 요청자가 같은지 확인
+            Portfolio portfolio = findPortfolio.get();
+            if (!portfolio.getUserId().getUserId().equals(portfolioUpdateDto.getUserId())) {
+                return ResponseEntity
+                        .status(HttpStatus.FORBIDDEN)
+                        .body(CustomApiResponse.createFailWithout(
+                                HttpStatus.FORBIDDEN.value(),
+                                "해당 포트폴리오의 작성자가 아닙니다."));
+            }
+
+            // 3. 기존 이미지 삭제
+            String originalFilename = portfolio.getPortfolioImagePath();
+            s3UploadService.deleteImage(originalFilename);
+
+            // 4. 새 이미지 업로드
+            String newImagePath = s3UploadService.saveFile(portfolioUpdateDto.getPortfolioImg());
+            portfolio.changeImagePath(newImagePath);
+
+            // 5. 저장
+            portfolioRepository.save(portfolio);
+
+            // 응답
+            CustomApiResponse<PortfolioUpdateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "포트폴리오가 수정되었습니다.");
+            return ResponseEntity.ok(res);
+        } catch (DataAccessException dae) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
-
-        //2.수정하려는 포트폴리오의 작성자와 수정 요청자가 같은지 확인
-        if (!findPortfolio.get().getUserId().getUserId().equals(portfolioUpdateDto.getUserId())) {
-            return ResponseEntity
-                    .status(HttpStatus.FORBIDDEN)
-                    .body(CustomApiResponse.createFailWithout(
-                            HttpStatus.FORBIDDEN.value(),
-                            "해당 포트폴리오의 작성자가 아닙니다."));
-        }
-
-        //3.수정
-        Portfolio portfolio = findPortfolio.get();
-        portfolio.changeImagePath(portfolioUpdateDto.getPortfolioImagePath());
-        portfolioRepository.save(portfolio);
-
-        //응답
-        CustomApiResponse<PortfolioUpdateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "포트폴리오가 수정되었습니다.");
-        return ResponseEntity.ok(res);
     }
 
     //특정 유저의 포트폴리오 조회(모든 유저가 조회 가능)
@@ -171,8 +191,10 @@ public class PortfolioServiceImpl implements PortfolioService{
                                 "해당 포트폴리오는 존재하지 않습니다."));
             }
 
+            Portfolio portfolio = findPortfolio.get();
+
             // 포트폴리오 사용자와 현재 접속한 사용자가 같은지 확인
-            if (!findPortfolio.get().getUserId().getUserId().equals(portfolioDeleteDto.getUserId())) {
+            if (!portfolio.getUserId().getUserId().equals(portfolioDeleteDto.getUserId())) {
                 return ResponseEntity
                         .status(HttpStatus.FORBIDDEN)
                         .body(CustomApiResponse.createFailWithout(
@@ -180,8 +202,12 @@ public class PortfolioServiceImpl implements PortfolioService{
                                 "해당 포트폴리오의 작성자가 아닙니다."));
             }
 
-            // 삭제
-            portfolioRepository.delete(findPortfolio.get());
+            // 3. 기존 이미지 삭제
+            String originalFilename = portfolio.getPortfolioImagePath();
+            s3UploadService.deleteImage(originalFilename);
+
+            // 4. 포트폴리오 삭제
+            portfolioRepository.delete(portfolio);
 
             // 응답
             CustomApiResponse<?> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "포트폴리오가 삭제되었습니다.");
@@ -194,4 +220,5 @@ public class PortfolioServiceImpl implements PortfolioService{
                     .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
     }
+
 }
