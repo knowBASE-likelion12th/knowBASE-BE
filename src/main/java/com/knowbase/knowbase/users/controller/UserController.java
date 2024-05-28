@@ -81,12 +81,13 @@ public class UserController {
 
 
     // 회원 정보 수정
-    @PatchMapping("/update/{userId}")
+    @PatchMapping(value = "/update/{userId}", consumes = {"multipart/form-data"})
     private ResponseEntity<CustomApiResponse<?>> updateUser(
             @PathVariable("userId") Long userId,
-            @Valid @RequestBody UserUpdateDto userUpdateDto) {
+            @Valid @ModelAttribute UserUpdateDto userUpdateDto) {
         return userService.updateUser(userId, userUpdateDto);
     }
+
 
 
     //멘토 수정페이지 접근 권한 검증

@@ -1,6 +1,8 @@
 package com.knowbase.knowbase.users.service;
 
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.knowbase.knowbase.caterories.repository.CategoryRepository;
 import com.knowbase.knowbase.domain.Category;
 import com.knowbase.knowbase.domain.User;
@@ -9,10 +11,12 @@ import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.exception.CustomValidationException;
 import com.knowbase.knowbase.util.exception.EntityDuplicatedException;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
+import com.knowbase.knowbase.util.service.S3UploadService;
 import com.knowbase.knowbase.util.valid.CustomValid;
 import jakarta.servlet.http.HttpSession;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,11 +28,16 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final HttpSession session;
+
+    private final S3UploadService s3UploadService;
+    private final AmazonS3 amazonS3;
+
+    @Value("${cloud.aws.s3.bucket}")
+    private String bucket;
 
     //멘토 회원가입
     @Override
@@ -286,7 +295,26 @@ public class UserServiceImpl implements UserService {
             }
 
             User user = findUser.get();
-            user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), userUpdateDto.getProfileImgPath(), userUpdateDto.getMentoringPath(), userUpdateDto.getMentorContent());
+
+            // Handle profile image upload and deletion
+            if (userUpdateDto.getProfileImg() != null) {
+                String newProfileImgPath = s3UploadService.saveFile(userUpdateDto.getProfileImg());
+                if (user.getProfImgPath() != null) {
+                    amazonS3.deleteObject(new DeleteObjectRequest(bucket, user.getProfImgPath()));
+                }
+                user.setProfImgPath(newProfileImgPath);
+            }
+
+            // Handle mentoring image upload and deletion
+            if (userUpdateDto.getMentoringImg() != null) {
+                String newMentoringImgPath = s3UploadService.saveFile(userUpdateDto.getMentoringImg());
+                if (user.getMentoringPath() != null) {
+                    amazonS3.deleteObject(new DeleteObjectRequest(bucket, user.getMentoringPath()));
+                }
+                user.setMentoringPath(newMentoringImgPath);
+            }
+
+            user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), user.getProfImgPath(), user.getMentoringPath(), userUpdateDto.getMentorContent());
             userRepository.save(user);
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -299,7 +327,6 @@ public class UserServiceImpl implements UserService {
                     .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
     }
-
     // 카테고리별 멘토 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> searchMentorsByCategory(String interest, String housingType, String spaceType, String style) {

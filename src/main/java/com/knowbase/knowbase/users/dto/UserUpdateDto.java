@@ -2,6 +2,7 @@ package com.knowbase.knowbase.users.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
@@ -15,9 +16,8 @@ public class UserUpdateDto {
     @NotBlank(message = "유저 아이디는 필수입니다.")
     private String userName;
 
-    private String profileImgPath;
-
-    private String mentoringPath;
+    private MultipartFile profileImg;
+    private MultipartFile mentoringImg;
 
     private String mentorContent;
 }

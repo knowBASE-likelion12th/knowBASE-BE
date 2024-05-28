@@ -44,9 +44,11 @@ public class User extends BaseEntity {
     @Column(name="EMPLOYMENT_PATH")
     private String employmentPath;
 
+    @Setter
     @Column(name="PROF_IMG_PATH")
     private String profImgPath;
 
+    @Setter
     @Column(name="MENTORING_PATH")
     private String mentoringPath;
 
