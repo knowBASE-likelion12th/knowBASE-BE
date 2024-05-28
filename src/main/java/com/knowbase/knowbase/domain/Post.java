@@ -2,10 +2,8 @@ package com.knowbase.knowbase.domain;
 
 import com.knowbase.knowbase.util.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -43,6 +41,7 @@ public class Post extends BaseEntity {
     @Column(name="POST_CONTENT")
     private String postContent;
 
+    @Setter
     @Column(name="POST_IMG_PATH")
     private String postImgPath;
 
