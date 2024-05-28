@@ -39,13 +39,14 @@ public class PortfolioController {
         return portfolio;
     }
 
-    //포트폴리오 상세 조회
+    // 포트폴리오 상세 조회
     @GetMapping("/detail")
     public ResponseEntity<CustomApiResponse<?>> getPortfolioDetail(
             @RequestParam("portfolioId") Long portfolioId) {
         ResponseEntity<CustomApiResponse<?>> portfolio = portfolioService.getPortfolioDetail(portfolioId);
         return portfolio;
     }
+
 
     //포트폴리오 삭제
     @DeleteMapping

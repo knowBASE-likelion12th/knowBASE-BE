@@ -15,7 +15,7 @@ public class PortfolioListDto {
         private String portfolioImagePath;
     }
 
-    //포트폴리오 조회
+    // 포트폴리오 조회
     @Getter @Setter
     @Builder
     @NoArgsConstructor(access = AccessLevel.PROTECTED)

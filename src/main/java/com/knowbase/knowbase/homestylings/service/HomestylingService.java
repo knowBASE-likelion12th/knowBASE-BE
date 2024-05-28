@@ -7,7 +7,7 @@ import com.knowbase.knowbase.util.response.CustomApiResponse;
 import org.springframework.http.ResponseEntity;
 
 public interface HomestylingService {
-    ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto.Req homestylingUpdateDto);
+    ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto);
 
     ResponseEntity<CustomApiResponse<?>> getHomestyling(Long userId);
 
@@ -16,5 +16,5 @@ public interface HomestylingService {
     ResponseEntity<CustomApiResponse<?>> deleteHomestyling(HomestylingDeleteDto homestylingId);
 
     //홈스타일링 작성
-    ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto.Req homestylingCreateDto);
+    ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto homestylingCreateDto);
 }
