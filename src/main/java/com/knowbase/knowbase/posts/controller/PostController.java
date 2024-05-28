@@ -22,7 +22,7 @@ public class PostController {
      //게시물 작성
      @PostMapping(consumes ={"multipart/form-data"} )
     public ResponseEntity<CustomApiResponse<?>> createPost(
-            @Valid @RequestBody PostCreateDto.Req postCreateDto){
+            @Valid @ModelAttribute PostCreateDto.Req postCreateDto){
          ResponseEntity<CustomApiResponse<?>> post = postService.createPost(postCreateDto);
          return post;
      }
@@ -31,7 +31,7 @@ public class PostController {
     @PutMapping
     public ResponseEntity<CustomApiResponse<?>> updatePost(
             @RequestParam("postId") Long postId,
-            @RequestBody PostUpdateDto.Req postUpdateDto){
+            @ModelAttribute PostUpdateDto.Req postUpdateDto){
          ResponseEntity<CustomApiResponse<?>> result = postService.updatePost(postId, postUpdateDto);
          return result;
     }

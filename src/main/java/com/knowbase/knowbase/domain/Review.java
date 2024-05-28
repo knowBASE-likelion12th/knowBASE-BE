@@ -2,10 +2,7 @@ package com.knowbase.knowbase.domain;
 
 import com.knowbase.knowbase.util.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -41,9 +38,11 @@ public class Review extends BaseEntity {
     @Column(name="date")
     private LocalDateTime date;
 
+    @Setter
     @Column(name="BEFORE_RE_IMG_PATH")
     private String beforeReImgPath;
 
+    @Setter
     @Column(name="AFTER_RE_IMG_PATH")
     private String afterReImgPath;
 

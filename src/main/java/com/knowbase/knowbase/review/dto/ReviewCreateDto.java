@@ -3,6 +3,7 @@ package com.knowbase.knowbase.review.dto;
 import com.knowbase.knowbase.domain.Review;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -29,10 +30,10 @@ public class ReviewCreateDto {
         LocalDateTime date = LocalDateTime.now();
 
         @NotNull(message = "멘토링 전 사진의 경로를 넣어주세요")
-        private String beforeReImgPath;
+        private MultipartFile beforeReImgPath;
 
         @NotNull(message = "멘토링 후 사진의 경로를 넣어주세요")
-        private String afterReImgPath;
+        private MultipartFile afterReImgPath;
 
         @NotNull(message = "후기 내용을 입력해주세요")
         private String reviewContent;

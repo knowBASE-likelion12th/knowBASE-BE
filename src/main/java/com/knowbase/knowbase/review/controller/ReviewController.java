@@ -19,13 +19,13 @@ public class ReviewController {
 
     //리뷰 작성
     @PostMapping
-    public ResponseEntity<CustomApiResponse<?>> createReview(@RequestBody ReviewCreateDto.Req req) {
+    public ResponseEntity<CustomApiResponse<?>> createReview(@ModelAttribute ReviewCreateDto.Req req) {
         return reviewService.createReview(req);
     }
 
     //리뷰 수정
     @PutMapping
-    public ResponseEntity<CustomApiResponse<?>> updateReview(@Valid @RequestBody ReviewUpdateDto.Req reviewUpdateDto) {
+    public ResponseEntity<CustomApiResponse<?>> updateReview(@Valid @ModelAttribute ReviewUpdateDto.Req reviewUpdateDto) {
         return reviewService.updateReview(reviewUpdateDto);
     }
     //리뷰 삭제
