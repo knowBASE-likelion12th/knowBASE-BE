@@ -10,7 +10,6 @@ import com.knowbase.knowbase.homestylings.repository.HomestylingRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import com.knowbase.knowbase.util.service.S3UploadService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class HomestylingServiceImpl implements HomestylingService {
     private final HomestylingRepository homestylingRepository;
     private final UserRepository userRepository;

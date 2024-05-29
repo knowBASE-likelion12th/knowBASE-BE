@@ -1,4 +1,4 @@
-package com.knowbase.knowbase.caterories.dto;
+package com.knowbase.knowbase.categories.dto;
 
 import com.knowbase.knowbase.domain.Category;
 import jakarta.validation.constraints.NotNull;

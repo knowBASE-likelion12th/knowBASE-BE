@@ -8,7 +8,6 @@ import com.knowbase.knowbase.questions.dto.QuestionUpdateDto;
 import com.knowbase.knowbase.questions.repository.QuestionRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class QuestionServiceImpl implements QuestionService{
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;

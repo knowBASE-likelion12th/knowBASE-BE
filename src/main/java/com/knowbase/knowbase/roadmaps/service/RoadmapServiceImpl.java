@@ -1,16 +1,13 @@
 package com.knowbase.knowbase.roadmaps.service;
 
-import com.knowbase.knowbase.domain.Introduce;
 import com.knowbase.knowbase.domain.Roadmap;
 import com.knowbase.knowbase.domain.User;
-import com.knowbase.knowbase.introduces.dto.IntroduceListDto;
 import com.knowbase.knowbase.roadmaps.dto.RoadmapCreateDto;
 import com.knowbase.knowbase.roadmaps.dto.RoadmapListDto;
 import com.knowbase.knowbase.roadmaps.dto.RoadmapUpdateDto;
 import com.knowbase.knowbase.roadmaps.repository.RoadmapRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -18,13 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class RoadmapServiceImpl implements RoadmapService {
     private final RoadmapRepository roadmapRepository;
     private final UserRepository userRepository;

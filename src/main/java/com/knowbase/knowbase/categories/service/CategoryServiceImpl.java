@@ -1,7 +1,7 @@
-package com.knowbase.knowbase.caterories.service;
+package com.knowbase.knowbase.categories.service;
 
-import com.knowbase.knowbase.caterories.dto.CreateCategoryDto;
-import com.knowbase.knowbase.caterories.repository.CategoryRepository;
+import com.knowbase.knowbase.categories.dto.CreateCategoryDto;
+import com.knowbase.knowbase.categories.repository.CategoryRepository;
 import com.knowbase.knowbase.domain.Category;
 import com.knowbase.knowbase.domain.User;
 import com.knowbase.knowbase.users.repository.UserRepository;
