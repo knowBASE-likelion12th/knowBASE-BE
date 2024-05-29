@@ -1,7 +1,6 @@
 package com.knowbase.knowbase.homestylings.dto;
 
 import com.knowbase.knowbase.domain.HomeStyling;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;

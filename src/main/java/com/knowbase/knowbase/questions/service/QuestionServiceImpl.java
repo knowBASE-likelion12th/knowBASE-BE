@@ -100,10 +100,8 @@ public class QuestionServiceImpl implements QuestionService{
     @Override
     public ResponseEntity<CustomApiResponse<?>> getQuestion(Long userId) {
         try {
-            Optional<User> findUser = userRepository.findById(userId);
-
             // 해당 userId를 가진 유저가 존재하지 않을 때
-            List<Question> findQuestion = questionRepository.findByUserId(findUser.get());
+            List<Question> findQuestion = questionRepository.findByUserId(userId);
 
             // 응답 DTO 생성
             List<QuestionListDto.QuestionDto> questionResponse = new ArrayList<>();

@@ -95,10 +95,8 @@ public class RoadmapServiceImpl implements RoadmapService {
     @Override
     public ResponseEntity<CustomApiResponse<?>> getRoadmap(Long userId) {
         try {
-            Optional<User> findUser = userRepository.findById(userId);
-
             // 해당 userId를 가진 유저가 쓴 게시물 찾기
-            List<Roadmap> findRoadmap = roadmapRepository.findByUserId(findUser.get());
+            List<Roadmap> findRoadmap = roadmapRepository.findByUserId(userId);
 
             // 응답 DTO 생성
             List<RoadmapListDto.RoadmapDto> roadmapResponse = new ArrayList<>();
