@@ -30,5 +30,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT r.mentorId FROM Review r WHERE r.mentorId.isMentor = true GROUP BY r.mentorId ORDER BY AVG(r.satisfaction) ASC")
     List<User> findMentorsBySatisfactionAsc();
 
+    Optional<Object> findByNickname(String nickname);
 }
 

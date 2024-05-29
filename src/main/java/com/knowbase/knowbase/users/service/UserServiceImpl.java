@@ -491,7 +491,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<CustomApiResponse<?>> checkNicknameExists(String nickname) {
         // 사용자 닉네임 중복 검증
-        boolean nickNameExists = userRepository.findByUserName(nickname).isPresent();
+        boolean nickNameExists = userRepository.findByNickname(nickname).isPresent();
         if (nickNameExists) {
             CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "이미 사용중인 닉네임입니다.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failResponse);
