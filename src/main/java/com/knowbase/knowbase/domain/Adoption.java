@@ -30,7 +30,7 @@ public class Adoption extends BaseEntity {
     private Long id;
 
     @Column(name = "IS_ADOPT")
-    private Boolean isAdopt = false; //디폴트를 false로 (좋아요x)
+    private Boolean isAdopt; //디폴트를 false로 (좋아요x)
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")

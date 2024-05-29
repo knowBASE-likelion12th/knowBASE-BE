@@ -42,4 +42,6 @@ public interface UserService {
     ResponseEntity<CustomApiResponse<?>> getMentorsBySatisfactionAsc();
 
     ResponseEntity<CustomApiResponse<?>> checkUserIdExists(String userId);
+
+    ResponseEntity<CustomApiResponse<?>> checkNicknameExists(String userName);
 }

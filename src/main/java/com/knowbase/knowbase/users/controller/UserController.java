@@ -129,4 +129,11 @@ public class UserController {
         ResponseEntity<CustomApiResponse<?>> result = userService.checkUserIdExists(userName);
         return result;
     }
+
+    //닉네임 중복 확인
+    @GetMapping("/exists/nickname")
+    public ResponseEntity<CustomApiResponse<?>> checkNicknameExists(@RequestParam("nickname") String userName) {
+        ResponseEntity<CustomApiResponse<?>> result = userService.checkNicknameExists(userName);
+        return result;
+    }
 }

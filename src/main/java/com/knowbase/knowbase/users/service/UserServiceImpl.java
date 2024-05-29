@@ -487,5 +487,19 @@ public class UserServiceImpl implements UserService {
         CustomApiResponse<Object> resultBody = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "사용 가능한 아이디입니다.");
         return ResponseEntity.status(HttpStatus.OK).body(resultBody);
     }
+
+    @Override
+    public ResponseEntity<CustomApiResponse<?>> checkNicknameExists(String nickname) {
+        // 사용자 닉네임 중복 검증
+        boolean nickNameExists = userRepository.findByUserName(nickname).isPresent();
+        if (nickNameExists) {
+            CustomApiResponse<Object> failResponse = CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "이미 사용중인 닉네임입니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(failResponse);
+        }
+
+        // 응답
+        CustomApiResponse<Object> resultBody = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "사용 가능한 닉네임입니다.");
+        return ResponseEntity.status(HttpStatus.OK).body(resultBody);
+    }
 }
 

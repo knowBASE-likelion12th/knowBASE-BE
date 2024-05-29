@@ -30,7 +30,7 @@ public class CommentLike extends BaseEntity{
     private Long id;
 
     @Column(name = "IS_LIKE")
-    private Boolean isLike = false; //디폴트를 false로 (좋아요x)
+    private Boolean isLike; //디폴트를 false로 (좋아요x)
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
