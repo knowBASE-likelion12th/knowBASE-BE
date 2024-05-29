@@ -10,7 +10,6 @@ import com.knowbase.knowbase.homestylings.repository.HomestylingRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import com.knowbase.knowbase.util.service.S3UploadService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class HomestylingServiceImpl implements HomestylingService {
     private final HomestylingRepository homestylingRepository;
     private final UserRepository userRepository;
@@ -123,7 +121,7 @@ public class HomestylingServiceImpl implements HomestylingService {
             }
 
             // 2. 해당 유저의 홈스타일링 조회
-            List<HomeStyling> findHomestyling = homestylingRepository.findByUserId(findUser.get());
+            List<HomeStyling> findHomestyling = homestylingRepository.findByUserId(userId);
 
             // 3. 응답 DTO 생성
             List<HomeStylingListDto.HomeStyling> homestylingList = new ArrayList<>();

@@ -1,13 +1,11 @@
-package com.knowbase.knowbase.caterories.repository;
+package com.knowbase.knowbase.categories.repository;
 
 import com.knowbase.knowbase.domain.Category;
-import com.knowbase.knowbase.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
 public interface CategoryRepository extends JpaRepository<Category, Long> {
-    List<Category> findByUserName(User userId);
     List<Category> findByInterestAndHousingTypeAndSpaceTypeAndStyle(String interest, String housingType, String spaceType, String style);
     List<Category> findByInterest(String interest);
     List<Category> findByHousingType(String housingType);

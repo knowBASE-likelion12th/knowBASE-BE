@@ -1,7 +1,7 @@
-package com.knowbase.knowbase.caterories.controller;
+package com.knowbase.knowbase.categories.controller;
 
-import com.knowbase.knowbase.caterories.dto.CreateCategoryDto;
-import com.knowbase.knowbase.caterories.service.CategoryService;
+import com.knowbase.knowbase.categories.dto.CreateCategoryDto;
+import com.knowbase.knowbase.categories.service.CategoryService;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

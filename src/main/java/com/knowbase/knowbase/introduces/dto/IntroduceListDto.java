@@ -11,6 +11,7 @@ public class IntroduceListDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class IntroduceDto {
+        private Long userId;
         private Long introId;
         private String introContent;
         private String availableTime;

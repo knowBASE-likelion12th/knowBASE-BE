@@ -2,7 +2,6 @@ package com.knowbase.knowbase.questions.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class QuestionListDto {
@@ -11,6 +10,7 @@ public class QuestionListDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class QuestionDto {
+        private Long userId;
         private Long questionId;
         private String questionContent1;
         private String answerContent1;

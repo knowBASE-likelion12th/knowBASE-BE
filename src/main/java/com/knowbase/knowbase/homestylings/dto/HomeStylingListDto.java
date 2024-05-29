@@ -2,7 +2,6 @@ package com.knowbase.knowbase.homestylings.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class HomeStylingListDto {
@@ -11,6 +10,7 @@ public class HomeStylingListDto {
     @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
     @AllArgsConstructor(access = lombok.AccessLevel.PROTECTED)
     public static class HomeStyling{
+        private Long userId;
         private Long homestylingId;
         private String homestylingTitle;
         private String homestylingImagePath;

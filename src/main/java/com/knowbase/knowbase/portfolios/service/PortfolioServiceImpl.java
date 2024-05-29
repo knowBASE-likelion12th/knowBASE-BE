@@ -10,7 +10,6 @@ import com.knowbase.knowbase.portfolios.repository.PortfolioRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import com.knowbase.knowbase.util.service.S3UploadService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class PortfolioServiceImpl implements PortfolioService{
     private final PortfolioRepository portfolioRepository;
     private final UserRepository userRepository;
@@ -121,7 +119,7 @@ public class PortfolioServiceImpl implements PortfolioService{
             }
 
             // 해당 유저의 모든 포트폴리오 조회
-            List<Portfolio> findPortfolio = portfolioRepository.findByUserId(findUser.get());
+            List<Portfolio> findPortfolio = portfolioRepository.findByUserId(userId);
 
             // 응답 DTO 생성
             List<PortfolioListDto.PortfolioDto> portfolioResponse = new ArrayList<>();

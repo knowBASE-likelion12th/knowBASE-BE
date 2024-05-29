@@ -11,6 +11,7 @@ public class PortfolioListDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class PortfolioDto {
+        private Long userId;
         private Long portfolioId;
         private String portfolioImagePath;
     }

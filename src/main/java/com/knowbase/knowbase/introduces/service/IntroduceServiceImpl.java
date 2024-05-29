@@ -8,7 +8,6 @@ import com.knowbase.knowbase.introduces.dto.IntroduceUpdateDto;
 import com.knowbase.knowbase.introduces.repository.IntroduceRepository;
 import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Builder
 public class IntroduceServiceImpl implements IntroduceService {
     private final IntroduceRepository introduceRepository;
     private final UserRepository userRepository;
@@ -99,10 +97,8 @@ public class IntroduceServiceImpl implements IntroduceService {
                         .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "유저 ID를 제공해야 합니다."));
             }
 
-            Optional<User> findUser = userRepository.findById(userId);
-
             // 해당 userId를 가진 유저가 쓴 게시물 찾기
-            List<Introduce> findIntroduce = introduceRepository.findByUserId(findUser.get());
+            List<Introduce> findIntroduce = introduceRepository.findByUserId(userId);
 
             // 응답 dto 생성
             List<IntroduceListDto.IntroduceDto> introduceResponse = new ArrayList<>();

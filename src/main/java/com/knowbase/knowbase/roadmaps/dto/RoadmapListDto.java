@@ -11,6 +11,7 @@ public class RoadmapListDto {
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     public static class RoadmapDto {
+        private Long userId;
         private Long roadmapId;
         private String roadmapBefore;
         private String roadmapStart;
