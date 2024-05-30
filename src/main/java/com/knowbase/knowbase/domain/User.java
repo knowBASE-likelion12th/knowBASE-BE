@@ -73,11 +73,25 @@ public class User extends BaseEntity {
     @Column(name="MENTO_STYLE")
     private String mentoStyle;
 
-    public void updateProfile(String userName, String nickname, String profImgPath, String mentoringPath, String mentorContent) {
+
+    public void changeUserName(String userName) {
         this.userName = userName;
+    }
+
+    public void changeNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+
+    public void changeProfImgPath(String profImgPath) {
         this.profImgPath = profImgPath;
+    }
+
+    public void changeMentoringPath(String mentoringPath) {
         this.mentoringPath = mentoringPath;
+    }
+
+    public void changeMentorContent(String mentorContent) {
         this.mentorContent = mentorContent;
     }
 }

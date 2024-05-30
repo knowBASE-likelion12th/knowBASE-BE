@@ -69,6 +69,7 @@ public class HomestylingServiceImpl implements HomestylingService {
     }
 
 
+    //홈스타일링 수정
     @Override
     public ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto, MultipartFile homestylingImg) {
         try {
@@ -92,13 +93,13 @@ public class HomestylingServiceImpl implements HomestylingService {
                                 "해당 홈스타일링은 수정할 수 없습니다."));
             }
 
-            // 3. 기존 이미지 삭제
-            String originalFilename = findHomestyling.get().getHomeStylingImagePath();
-            s3UploadService.deleteImage(originalFilename);
-
             // 4. 새 이미지 업로드
             String newImagePath = s3UploadService.saveFile(homestylingImg);
             homestyling.changeImagePath(newImagePath);
+
+            // 5. 수정 내용 변경
+            homestyling.changeTitle(homestylingUpdateDto.getHomestylingTitle());
+            homestyling.changeDescription(homestylingUpdateDto.getHomestylingDescription());
 
             // 5. 저장
             homestylingRepository.save(homestyling);
