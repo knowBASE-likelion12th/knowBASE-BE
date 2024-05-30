@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 public class HomestylingCreateDto {
 
     @Getter
-    @Setter
+    @Setter @Builder
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
