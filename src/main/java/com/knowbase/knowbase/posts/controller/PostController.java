@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -20,10 +21,11 @@ public class PostController {
      private final PostService postService;
 
      //게시물 작성
-     @PostMapping(consumes ={"multipart/form-data"} )
+    @PostMapping()
     public ResponseEntity<CustomApiResponse<?>> createPost(
-            @Valid @ModelAttribute PostCreateDto.Req postCreateDto){
-         ResponseEntity<CustomApiResponse<?>> post = postService.createPost(postCreateDto);
+            @Valid @RequestPart(value="post") PostCreateDto.Req postCreateDto,
+            @Valid @RequestPart(value = "postImage") MultipartFile postImgPath){
+         ResponseEntity<CustomApiResponse<?>> post = postService.createPost(postCreateDto, postImgPath);
          return post;
      }
 

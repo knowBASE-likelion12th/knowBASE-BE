@@ -18,6 +18,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,7 +41,7 @@ public class PostServiceImpl implements PostService{
 
     //게시물 작성
     @Override
-    public ResponseEntity<CustomApiResponse<?>> createPost(PostCreateDto.Req postCreateDto) {
+    public ResponseEntity<CustomApiResponse<?>> createPost(PostCreateDto.Req postCreateDto, MultipartFile postImg) {
         try{
             System.out.println("postCreateDto.getUserId()"+postCreateDto.getUserId());
             //댓글 작성자가 DB에 존재하는지 확인
@@ -52,13 +53,11 @@ public class PostServiceImpl implements PostService{
                                 "해당 유저는 존재하지 않습니다."));
             }
 
-            String imgPath = null;
-            System.out.println("postCreateDto.getPostImgPath()"+postCreateDto.getPostImgPath());
-            if (postCreateDto.getPostImgPath() != null && !postCreateDto.getPostImgPath().isEmpty()) {
-                imgPath = s3UploadService.saveFile(postCreateDto.getPostImgPath());
-            }
+            //S3에 파일 업로드
+            String PostImagePath = s3UploadService.saveFile(postImg);
 
-            Post newPost = postCreateDto.toEntity(imgPath);
+
+            Post newPost = postCreateDto.toEntity(PostImagePath);
             newPost.createPost(findUser.get()); // 연관관계 설정
             postRepository.save(newPost);
 

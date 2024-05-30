@@ -1,5 +1,6 @@
 package com.knowbase.knowbase.posts.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.knowbase.knowbase.domain.Post;
 import com.knowbase.knowbase.domain.User;
 import jakarta.validation.constraints.NotBlank;
@@ -14,8 +15,11 @@ public class PostCreateDto
 {
     @Getter
     @Setter
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    @Data
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Req {
         @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
         private Long userId;
@@ -26,8 +30,6 @@ public class PostCreateDto
         @NotNull(message = "게시물의 내용을 입력해주세요.")
         private String postContent;
 
-        private MultipartFile postImgPath ;
-
         public Post toEntity(String postImgPath) {
             return Post.builder()
                     .postTitle(postTitle)
@@ -36,20 +38,5 @@ public class PostCreateDto
                     .build();
         }
     }
-
-    //불필요
-/*    @Getter
-    @Builder
-    @NoArgsConstructor(access = AccessLevel.PROTECTED)
-    public static class CreatPost {
-        private Long postId;
-        private LocalDateTime createdAt;
-
-        public CreatPost(Long postId, LocalDateTime createdAt) {
-            this.postId = postId;
-            this.createdAt = createdAt;
-        }
-    }*/
-
 }
 
