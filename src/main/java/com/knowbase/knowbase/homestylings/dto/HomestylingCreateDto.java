@@ -12,6 +12,7 @@ public class HomestylingCreateDto {
     @AllArgsConstructor(access = AccessLevel.PROTECTED)
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     @JsonIgnoreProperties(ignoreUnknown = true)
+    @Data
     public static class HomestylingCreateDtoReq {
         @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
         private Long userId;
