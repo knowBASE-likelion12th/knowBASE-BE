@@ -24,7 +24,7 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<CustomApiResponse<?>> createPost(
             @Valid @RequestPart(value="post") PostCreateDto.Req postCreateDto,
-            @Valid @RequestPart(value = "postImage") MultipartFile postImgPath){
+            @Valid @RequestPart(value = "postImg") MultipartFile postImgPath){
          ResponseEntity<CustomApiResponse<?>> post = postService.createPost(postCreateDto, postImgPath);
          return post;
      }
