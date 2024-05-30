@@ -15,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class PortfolioServiceImpl implements PortfolioService{
 
     //포트폴리오 작성
     @Override
-    public ResponseEntity<CustomApiResponse<?>> createPortfolio(PortfolioCreateDto portfolioCreateDto) {
+    public ResponseEntity<CustomApiResponse<?>> createPortfolio(PortfolioCreateDto portfolioCreateDto, MultipartFile portfolioImg) {
         try {
             // 게시글 작성자가 DB에 존재하는지 확인
             Optional<User> findUser = userRepository.findById(portfolioCreateDto.getUserId());
@@ -40,7 +41,7 @@ public class PortfolioServiceImpl implements PortfolioService{
             }
 
             // S3에 파일 업로드
-            String portfolioImagePath = s3UploadService.saveFile(portfolioCreateDto.getPortfolioImg());
+            String portfolioImagePath = s3UploadService.saveFile(portfolioImg);
 
             Portfolio newPortfolio = portfolioCreateDto.toEntity(portfolioImagePath);
             newPortfolio.createPortfolio(findUser.get()); // 연관관계 설정
@@ -61,7 +62,7 @@ public class PortfolioServiceImpl implements PortfolioService{
 
     //포트폴리오 수정
     @Override
-    public ResponseEntity<CustomApiResponse<?>> updatePortfolio(Long portfolioId, PortfolioUpdateDto portfolioUpdateDto) {
+    public ResponseEntity<CustomApiResponse<?>> updatePortfolio(Long portfolioId, PortfolioUpdateDto portfolioUpdateDto, MultipartFile portfolioImg) {
         try {
             // 1. 수정하려는 포트폴리오가 DB에 존재하는지 확인
             Optional<Portfolio> findPortfolio = portfolioRepository.findById(portfolioId);
@@ -83,12 +84,8 @@ public class PortfolioServiceImpl implements PortfolioService{
                                 "해당 포트폴리오의 작성자가 아닙니다."));
             }
 
-            // 3. 기존 이미지 삭제
-            String originalFilename = portfolio.getPortfolioImagePath();
-            s3UploadService.deleteImage(originalFilename);
-
             // 4. 새 이미지 업로드
-            String newImagePath = s3UploadService.saveFile(portfolioUpdateDto.getPortfolioImg());
+            String newImagePath = s3UploadService.saveFile(portfolioImg);
             portfolio.changeImagePath(newImagePath);
 
             // 5. 저장

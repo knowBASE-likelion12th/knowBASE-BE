@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,18 +75,19 @@ public class UserController {
     @GetMapping()
     private ResponseEntity<CustomApiResponse<?>> getMentorDetail(
             @RequestParam("userId") Long userId){
-        System.out.println("LOG userId " + userId);
         ResponseEntity<CustomApiResponse<?>> result = userService.getMentorDetail(userId);
         return result;
     }
 
 
     // 회원 정보 수정
-    @PatchMapping(value = "/update/{userId}", consumes = {"multipart/form-data"})
+    @PatchMapping(value = "/update/{userId}")
     private ResponseEntity<CustomApiResponse<?>> updateUser(
             @PathVariable("userId") Long userId,
-            @Valid @ModelAttribute UserUpdateDto userUpdateDto) {
-        return userService.updateUser(userId, userUpdateDto);
+            @Valid @RequestPart(value = "user") UserUpdateDto userUpdateDto,
+            @Valid @RequestPart(value = "profileImg") MultipartFile profileImg,
+            @Valid @RequestPart(value = "mentoringImg") MultipartFile mentoringImg) {
+        return userService.updateUser(userId, userUpdateDto, profileImg, mentoringImg);
     }
 
 

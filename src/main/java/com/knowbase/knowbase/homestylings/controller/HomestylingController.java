@@ -20,18 +20,18 @@ public class HomestylingController {
     // 홈스타일링 작성
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> createHomestyling(
-            @RequestPart("homestylingCreateDto") HomestylingCreateDto.HomestylingCreateDtoReq homestylingCreateDtoReq,
-            @RequestPart("homestylingImg") MultipartFile homestylingImg) {
+            @Valid @RequestPart(value = "homestyling") HomestylingCreateDto.HomestylingCreateDtoReq homestylingCreateDtoReq,
+            @Valid @RequestPart(value = "homestylingImg") MultipartFile homestylingImg) {
         ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.createHomestyling(homestylingCreateDtoReq, homestylingImg);
         return homestyling;
     }
 
     // 홈스타일링 수정
-    @PatchMapping(value = "/{homestylingId}", consumes = {"multipart/form-data"})
+    @PatchMapping(value = "/{homestylingId}")
     public ResponseEntity<CustomApiResponse<?>> updateHomestyling(
             @PathVariable("homestylingId") Long homestylingId,
-            @Valid @RequestPart("homestylingUpdateDto") HomestylingUpdateDto homestylingUpdateDto,
-            @RequestPart("homestylingImg") MultipartFile homestylingImg) {
+            @Valid @RequestPart(value = "homestyling") HomestylingUpdateDto homestylingUpdateDto,
+            @Valid @RequestPart(value = "homestylingImg") MultipartFile homestylingImg) {
         return homestylingService.updateHomestyling(homestylingId, homestylingUpdateDto, homestylingImg);
     }
 

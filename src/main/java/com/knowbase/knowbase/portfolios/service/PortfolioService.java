@@ -5,11 +5,12 @@ import com.knowbase.knowbase.portfolios.dto.PortfolioDeleteDto;
 import com.knowbase.knowbase.portfolios.dto.PortfolioUpdateDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface PortfolioService {
-    ResponseEntity<CustomApiResponse<?>> createPortfolio(PortfolioCreateDto portfolioCreateDto);
+    ResponseEntity<CustomApiResponse<?>> createPortfolio(PortfolioCreateDto portfolioCreateDto, MultipartFile portfolioImg);
 
-    ResponseEntity<CustomApiResponse<?>> updatePortfolio(Long portfolioId, PortfolioUpdateDto portfolioUpdateDto);
+    ResponseEntity<CustomApiResponse<?>> updatePortfolio(Long portfolioId, PortfolioUpdateDto portfolioUpdateDto, MultipartFile portfolioImg);
 
     ResponseEntity<CustomApiResponse<?>> getPortfolio(Long userId);
 

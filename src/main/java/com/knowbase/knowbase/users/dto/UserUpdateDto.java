@@ -1,23 +1,26 @@
 package com.knowbase.knowbase.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
-@Getter
-@Setter
-@Builder
+@Getter @Setter @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class UserUpdateDto {
-    @NotBlank(message = "유저 닉네임은 필수입니다")
+    @NotNull(message = "작성자 ID은 필수입니다")
+    private Long userId;
+
+    @NotNull(message = "유저 닉네임은 필수입니다")
     private String nickName;
 
-    @NotBlank(message = "유저 아이디는 필수입니다.")
+    @NotNull(message = "유저 아이디는 필수입니다.")
     private String userName;
 
-    private MultipartFile profileImg;
-    private MultipartFile mentoringImg;
-
+    @NotNull(message = "멘토링 설명은 필수입니다.")
     private String mentorContent;
 }

@@ -17,6 +17,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -281,36 +282,34 @@ public class UserServiceImpl implements UserService {
 
     // 회원 정보 수정
     @Override
-    public ResponseEntity<CustomApiResponse<?>> updateUser(Long userId, UserUpdateDto userUpdateDto) {
+    public ResponseEntity<CustomApiResponse<?>> updateUser(Long userId, UserUpdateDto userUpdateDto, MultipartFile profileImg, MultipartFile mentoringImg) {
         try {
             Optional<User> findUser = userRepository.findById(userId);
-
             if (findUser.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
                         .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 회원입니다."));
             }
 
+            //수정하려는 회원이 로그인한 유지의 것인지 확인
             User user = findUser.get();
-
-            // Handle profile image upload and deletion
-            if (userUpdateDto.getProfileImg() != null) {
-                String newProfileImgPath = s3UploadService.saveFile(userUpdateDto.getProfileImg());
-                if (user.getProfImgPath() != null) {
-                    amazonS3.deleteObject(new DeleteObjectRequest(bucket, user.getProfImgPath()));
-                }
-                user.setProfImgPath(newProfileImgPath);
+            if(!user.getUserId().equals(userUpdateDto.getUserId())){
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(CustomApiResponse.createFailWithout(
+                                HttpStatus.UNAUTHORIZED.value(),
+                                "수정 권한이 없습니다."));
             }
 
-            // Handle mentoring image upload and deletion
-            if (userUpdateDto.getMentoringImg() != null) {
-                String newMentoringImgPath = s3UploadService.saveFile(userUpdateDto.getMentoringImg());
-                if (user.getMentoringPath() != null) {
-                    amazonS3.deleteObject(new DeleteObjectRequest(bucket, user.getMentoringPath()));
-                }
-                user.setMentoringPath(newMentoringImgPath);
-            }
+            //새 이미지 업로드
+            String newProfileImgPath = s3UploadService.saveFile(profileImg);
+            String newMentoringImgPath = s3UploadService.saveFile(mentoringImg);
 
-            user.updateProfile(userUpdateDto.getUserName(), userUpdateDto.getNickName(), user.getProfImgPath(), user.getMentoringPath(), userUpdateDto.getMentorContent());
+            //수정내용변경
+            user.changeNickname(userUpdateDto.getNickName());
+            user.changeUserName(userUpdateDto.getUserName());
+            user.changeMentorContent(userUpdateDto.getMentorContent());
+            user.changeProfImgPath(newProfileImgPath);
+            user.changeMentoringPath(newMentoringImgPath);
+
             userRepository.save(user);
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -323,6 +322,7 @@ public class UserServiceImpl implements UserService {
                     .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
     }
+
     // 카테고리별 멘토 조회
     @Override
     public ResponseEntity<CustomApiResponse<?>> searchMentorsByCategory(String interest, String housingType, String spaceType, String style) {

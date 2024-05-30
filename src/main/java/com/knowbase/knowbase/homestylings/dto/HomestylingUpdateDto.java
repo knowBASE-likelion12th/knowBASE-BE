@@ -1,12 +1,16 @@
 package com.knowbase.knowbase.homestylings.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-@Getter @Setter
+@Getter @Setter @Builder
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class HomestylingUpdateDto {
+
     @NotNull(message = "작성자 id는 비어있을 수 없습니다.")
     private Long userId;
 
