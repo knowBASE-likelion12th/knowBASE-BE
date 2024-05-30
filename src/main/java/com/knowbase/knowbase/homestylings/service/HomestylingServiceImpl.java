@@ -11,10 +11,12 @@ import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import com.knowbase.knowbase.util.service.S3UploadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,28 +29,35 @@ public class HomestylingServiceImpl implements HomestylingService {
     private final UserRepository userRepository;
     private final S3UploadService s3UploadService;
 
+    @Autowired
+    public HomestylingServiceImpl(HomestylingRepository homestylingRepository, S3UploadService s3UploadService, UserRepository userRepository) {
+        this.homestylingRepository = homestylingRepository;
+        this.s3UploadService = s3UploadService;
+        this.userRepository = userRepository;
+    }
+
     //홈스타일링 작성
     @Override
-    public ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto homestylingCreateDto) {
+    public ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto.HomestylingCreateDtoReq homestylingCreateDtoReq, MultipartFile homestylingImg) {
         try {
             // 게시글 작성자가 DB에 존재하는지 확인
-            Optional<User> findUser = userRepository.findById(homestylingCreateDto.getUserId());
+            Optional<User> findUser = userRepository.findById(homestylingCreateDtoReq.getUserId());
             if (findUser.isEmpty()) {
                 return ResponseEntity
                         .status(HttpStatus.FORBIDDEN)
-                        .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(),
-                                "해당 유저는 존재하지 않습니다."));
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.FORBIDDEN.value(), "해당 유저는 존재하지 않습니다."));
             }
 
-            //S3에 파일 업로드
-            String homestylingImagePath = s3UploadService.saveFile(homestylingCreateDto.getHomestylingImg());
+            // S3에 파일 업로드
+            String homestylingImagePath = s3UploadService.saveFile(homestylingImg);
 
-            HomeStyling newHomestyling = homestylingCreateDto.toEntity(homestylingImagePath);
+            // 홈스타일링 엔티티 생성
+            HomeStyling newHomestyling = homestylingCreateDtoReq.toEntity(homestylingImagePath);
             newHomestyling.createHomeStyling(findUser.get()); // 연관관계 설정
             homestylingRepository.save(newHomestyling);
 
             // 응답
-            CustomApiResponse<HomestylingCreateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "홈스타일링이 작성되었습니다.");
+            CustomApiResponse<HomestylingCreateDto.HomestylingCreateDtoReq> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "홈스타일링이 작성되었습니다.");
             return ResponseEntity.ok(res);
         } catch (DataAccessException dae) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -60,9 +69,8 @@ public class HomestylingServiceImpl implements HomestylingService {
     }
 
 
-    //홈스타일링 수정
     @Override
-    public ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto) {
+    public ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto, MultipartFile homestylingImg) {
         try {
             // 1. 수정하려는 홈스타일링이 DB에 존재하는지 확인
             Optional<HomeStyling> findHomestyling = homestylingRepository.findById(homestylingId);
@@ -88,11 +96,11 @@ public class HomestylingServiceImpl implements HomestylingService {
             String originalFilename = findHomestyling.get().getHomeStylingImagePath();
             s3UploadService.deleteImage(originalFilename);
 
-            //4. 새 이미지 업로드
-            String newImagePath = s3UploadService.saveFile(homestylingUpdateDto.getHomestylingImg());
+            // 4. 새 이미지 업로드
+            String newImagePath = s3UploadService.saveFile(homestylingImg);
             homestyling.changeImagePath(newImagePath);
 
-            //5.저장
+            // 5. 저장
             homestylingRepository.save(homestyling);
 
             // 응답
@@ -106,7 +114,6 @@ public class HomestylingServiceImpl implements HomestylingService {
                     .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
         }
     }
-
 
     //특정 유저의 홈스타일링 조회(모든 유저가 조회 가능)
     @Override

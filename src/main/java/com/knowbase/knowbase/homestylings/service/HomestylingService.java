@@ -5,9 +5,10 @@ import com.knowbase.knowbase.homestylings.dto.HomestylingDeleteDto;
 import com.knowbase.knowbase.homestylings.dto.HomestylingUpdateDto;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface HomestylingService {
-    ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto);
+    ResponseEntity<CustomApiResponse<?>> updateHomestyling(Long homestylingId, HomestylingUpdateDto homestylingUpdateDto, MultipartFile homestylingImg);
 
     ResponseEntity<CustomApiResponse<?>> getHomestyling(Long userId);
 
@@ -15,6 +16,5 @@ public interface HomestylingService {
 
     ResponseEntity<CustomApiResponse<?>> deleteHomestyling(HomestylingDeleteDto homestylingId);
 
-    //홈스타일링 작성
-    ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto homestylingCreateDto);
+    ResponseEntity<CustomApiResponse<?>> createHomestyling(HomestylingCreateDto.HomestylingCreateDtoReq homestylingCreateDtoReq, MultipartFile homestylingImg);
 }

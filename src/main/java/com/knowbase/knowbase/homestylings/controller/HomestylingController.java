@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,21 +17,22 @@ import org.springframework.web.bind.annotation.*;
 public class HomestylingController {
     private final HomestylingService homestylingService;
 
-    //홈스타일링 작성
+    // 홈스타일링 작성
     @PostMapping(consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> createHomestyling(
-            @Valid @ModelAttribute HomestylingCreateDto homestylingCreateDto) {
-        ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.createHomestyling(homestylingCreateDto);
+            @RequestPart("homestylingCreateDto") HomestylingCreateDto.HomestylingCreateDtoReq homestylingCreateDtoReq,
+            @RequestPart("homestylingImg") MultipartFile homestylingImg) {
+        ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.createHomestyling(homestylingCreateDtoReq, homestylingImg);
         return homestyling;
     }
 
-    //홈스타일링 수정
-    @PatchMapping(value= "/{homestylingId}", consumes = {"multipart/form-data"})
+    // 홈스타일링 수정
+    @PatchMapping(value = "/{homestylingId}", consumes = {"multipart/form-data"})
     public ResponseEntity<CustomApiResponse<?>> updateHomestyling(
             @PathVariable("homestylingId") Long homestylingId,
-            @Valid @ModelAttribute HomestylingUpdateDto homestylingUpdateDto) {
-        ResponseEntity<CustomApiResponse<?>> homestyling = homestylingService.updateHomestyling(homestylingId, homestylingUpdateDto);
-        return homestyling;
+            @Valid @RequestPart("homestylingUpdateDto") HomestylingUpdateDto homestylingUpdateDto,
+            @RequestPart("homestylingImg") MultipartFile homestylingImg) {
+        return homestylingService.updateHomestyling(homestylingId, homestylingUpdateDto, homestylingImg);
     }
 
     //특정 유저의 홈스타일링 조회(모든 유저가 조회 가능)
