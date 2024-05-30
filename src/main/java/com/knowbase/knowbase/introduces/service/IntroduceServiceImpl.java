@@ -42,9 +42,6 @@ public class IntroduceServiceImpl implements IntroduceService {
             // 응답
             CustomApiResponse<IntroduceCreateDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "소개글이 작성되었습니다.");
             return ResponseEntity.ok(res);
-        } catch (DataAccessException dae) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));

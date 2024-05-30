@@ -19,6 +19,7 @@ import com.knowbase.knowbase.users.repository.UserRepository;
 import com.knowbase.knowbase.util.response.CustomApiResponse;
 import com.knowbase.knowbase.util.service.S3UploadService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -75,7 +76,7 @@ public class ReviewServiceImpl implements ReviewService{
                     .menteeId(findmentee.get())
                     .reviewTitle(req.getReviewTitle())
                     .nickname(findmentee.get().getNickname())
-                    .date(req.getDate())
+                    .date(LocalDateTime.now())
                     .beforeReImgPath(imgBeforePath)
                     .afterReImgPath(imgAfterPath)
                     .reviewContent(req.getReviewContent())

@@ -26,13 +26,10 @@ public class ReviewCreateDto {
         @NotNull(message = "작성자의 닉네임 입력해주세요")
         private String nickname;
 
-        //api를 호출하는 그 시점의 날짜
-        LocalDateTime date = LocalDateTime.now();
-
-        @NotNull(message = "멘토링 전 사진의 경로를 넣어주세요")
+        //@NotNull(message = "멘토링 전 사진의 경로를 넣어주세요")
         private MultipartFile beforeReImgPath;
 
-        @NotNull(message = "멘토링 후 사진의 경로를 넣어주세요")
+       // @NotNull(message = "멘토링 후 사진의 경로를 넣어주세요")
         private MultipartFile afterReImgPath;
 
         @NotNull(message = "후기 내용을 입력해주세요")
