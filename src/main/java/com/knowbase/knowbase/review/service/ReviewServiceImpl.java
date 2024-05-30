@@ -317,9 +317,6 @@ public class ReviewServiceImpl implements ReviewService{
             return ResponseEntity
                     .status(HttpStatus.OK)
                     .body(CustomApiResponse.createSuccess(HttpStatus.OK.value(), null, "후기가 수정되었습니다"));
-        }catch (DataAccessException dae) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "데이터베이스 오류가 발생했습니다."));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(CustomApiResponse.createFailWithout(HttpStatus.INTERNAL_SERVER_ERROR.value(), "서버 오류가 발생했습니다."));
