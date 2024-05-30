@@ -91,14 +91,18 @@ public class IntroduceServiceImpl implements IntroduceService {
 
     @Override
     public ResponseEntity<CustomApiResponse<?>> getIntroduce(Long userId) {
+
         try {
-            if (userId == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "유저 ID를 제공해야 합니다."));
+            Optional<User> findUser = userRepository.findById(userId);
+            if (findUser.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 유저입니다."));
             }
 
+
             // 해당 userId를 가진 유저가 쓴 게시물 찾기
-            List<Introduce> findIntroduce = introduceRepository.findByUserId(userId);
+            List<Introduce> findIntroduce = introduceRepository.findByUserId(findUser.get());
 
             // 응답 dto 생성
             List<IntroduceListDto.IntroduceDto> introduceResponse = new ArrayList<>();

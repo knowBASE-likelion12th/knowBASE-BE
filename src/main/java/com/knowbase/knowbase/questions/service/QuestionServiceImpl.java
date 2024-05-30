@@ -101,7 +101,14 @@ public class QuestionServiceImpl implements QuestionService{
     public ResponseEntity<CustomApiResponse<?>> getQuestion(Long userId) {
         try {
             // 해당 userId를 가진 유저가 존재하지 않을 때
-            List<Question> findQuestion = questionRepository.findByUserId(userId);
+            Optional<User> findUser = userRepository.findById(userId);
+            if (findUser.isEmpty()) {
+                return ResponseEntity
+                        .status(HttpStatus.NOT_FOUND)
+                        .body(CustomApiResponse.createFailWithout(HttpStatus.NOT_FOUND.value(), "존재하지 않는 유저입니다."));
+            }
+
+            List<Question> findQuestion = questionRepository.findByUserId(findUser.get());
 
             // 응답 DTO 생성
             List<QuestionListDto.QuestionDto> questionResponse = new ArrayList<>();
