@@ -121,7 +121,7 @@ public class HomestylingServiceImpl implements HomestylingService {
             }
 
             // 2. 해당 유저의 홈스타일링 조회
-            List<HomeStyling> findHomestyling = homestylingRepository.findByUserId(userId);
+            List<HomeStyling> findHomestyling = homestylingRepository.findByUserId(findUser.get());
 
             // 3. 응답 DTO 생성
             List<HomeStylingListDto.HomeStyling> homestylingList = new ArrayList<>();

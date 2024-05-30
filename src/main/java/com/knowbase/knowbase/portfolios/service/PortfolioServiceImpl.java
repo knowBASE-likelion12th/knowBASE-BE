@@ -119,7 +119,7 @@ public class PortfolioServiceImpl implements PortfolioService{
             }
 
             // 해당 유저의 모든 포트폴리오 조회
-            List<Portfolio> findPortfolio = portfolioRepository.findByUserId(userId);
+            List<Portfolio> findPortfolio = portfolioRepository.findByUserId(findUser.get());
 
             // 응답 DTO 생성
             List<PortfolioListDto.PortfolioDto> portfolioResponse = new ArrayList<>();
